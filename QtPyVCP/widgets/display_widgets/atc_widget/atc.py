@@ -1,3 +1,5 @@
+import time
+
 from PyQt5.QtGui import QGuiApplication
 from PyQt5.QtQml import QQmlApplicationEngine
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
@@ -7,6 +9,7 @@ class DynATC(QObject):
 
     def __init__(self):
         QObject.__init__(self)
+        self.atc_rotation = 0
 
     # Signal sending sum
     # Necessarily give the name of the argument through arguments=['sum']
@@ -15,9 +18,9 @@ class DynATC(QObject):
 
     # Slot for summing two numbers
     @pyqtSlot(int)
-    def sum(self, arg1):
-        # Sum two arguments and emit a signal
-        self.sumResult.emit(arg1)
+    def sum(self):
+        self.atc_rotation += 1
+        self.sumResult.emit(self.atc_rotation)
 
 
 if __name__ == "__main__":

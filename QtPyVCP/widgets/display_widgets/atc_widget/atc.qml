@@ -42,15 +42,16 @@ ApplicationWindow {
             }
         }
     }
-    Rectangle {
-        id: atc
-        x: 300
-        y: 200
-        width: 100; height: 100
-        color: "blue"
-        transform: Rotation {
-            id: atc_rot
-        }
+
+    BorderImage {
+        id: atc_holder
+        x: 137
+        y: 43
+        width: 314
+        height: 314
+        rotation: 0
+        transformOrigin: Item.Center
+        source: "images/carousel_12.png"
     }
 
     // Here we take the result of sum or subtracting numbers
@@ -60,9 +61,7 @@ ApplicationWindow {
         // Sum signal handler
         onSumResult: {
             // sum was set through arguments=['sum']
-            atc_rot.angle = sum
-
-            atc.transform.Rotation = sum
+            atc_holder.rotation = sum
         }
     }
 }
