@@ -21,6 +21,8 @@ Rectangle {
 
         // Input field of the first number
 
+
+
         Button {
             height: 40
             Layout.fillWidth: true
@@ -45,7 +47,11 @@ Rectangle {
         z: 0
         rotation: 0
         transformOrigin: Item.Center
-        source: "../images/carousel_12.png"
+        source: "images/carousel_12.png"
+
+        property int rotate_plus: 33
+        property int rotate_minus: 33
+        property int back: 3
 
         Rectangle {
             id: tool_1
@@ -314,7 +320,7 @@ Rectangle {
 
     // Here we take the result of sum or subtracting numbers
     Connections {
-        target: atc
+        target: atc_holder
 
         // Sum signal handler
         onRotateResult: {
@@ -334,6 +340,66 @@ Rectangle {
             tool_11.rotation = -rotate
             tool_12.rotation = -rotate
         }
+    }
+
+    Connections {
+        target: tool_1
+        onClicked: print("clicked")
+    }
+
+    Connections {
+        target: tool_2
+        onClicked: print("clicked")
+    }
+
+    Connections {
+        target: tool_3
+        onClicked: print("clicked")
+    }
+
+    Connections {
+        target: tool_4
+        onClicked: print("clicked")
+    }
+
+    Connections {
+        target: tool_5
+        onClicked: print("clicked")
+    }
+
+    Connections {
+        target: tool_6
+        onClicked: print("clicked")
+    }
+
+    Connections {
+        target: tool_7
+        onClicked: print("clicked")
+    }
+
+    Connections {
+        target: tool_8
+        onClicked: print("clicked")
+    }
+
+    Connections {
+        target: tool_9
+        onClicked: print("clicked")
+    }
+
+    Connections {
+        target: tool_10
+        onClicked: print("clicked")
+    }
+
+    Connections {
+        target: tool_11
+        onClicked: print("clicked")
+    }
+
+    Connections {
+        target: tool_12
+        onClicked: print("clicked")
     }
 
 }

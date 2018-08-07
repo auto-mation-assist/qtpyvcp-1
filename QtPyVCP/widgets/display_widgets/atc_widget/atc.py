@@ -16,39 +16,11 @@ class DynATC(QQuickWidget):
         url = QUrl.fromLocalFile(os.path.join(WIDGET_PATH, "atc.qml"))
         self.setSource(url)
 
-        self.rootContext().setContextProperty("atc", self)
-
-
-
-    # Signal sending sum
-    # Necessarily give the name of the argument through arguments=['sum']
-    # Otherwise it will not be possible to get it up in QML
-    rotateResult = pyqtSignal(int, arguments=['rotate'])
+        self.rootContext().setContextProperty("atc_holder", self)
+        self.rotateResult = pyqtSignal(int, arguments=['rotate'])
 
     # Slot for summing two numbers
     @pyqtSlot(int)
     def rotate(self):
         self.atc_rotation += 1
         self.rotateResult.emit(self.atc_rotation)
-
-
-if __name__ == "__main__":
-    import sys
-
-    # Create an instance of the application
-    app = QGuiApplication(sys.argv)
-
-    # Create QML engine
-    engine = QQmlApplicationEngine()
-
-    # Create a calculator object
-    calculator = DynATC()
-
-    # And register it in the context of QML
-    engine.rootContext().setContextProperty("calculator", calculator)
-    # Load the qml file into the engine
-    engine.load("atc.qml")
-
-    engine.quit.connect(app.quit)
-    sys.exit(app.exec_())
-

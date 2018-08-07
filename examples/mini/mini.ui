@@ -6,21 +6,32 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>500</width>
-    <height>300</height>
+    <width>639</width>
+    <height>441</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="DynATC" name="dynatc">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>600</width>
+      <height>400</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>500</width>
-     <height>20</height>
+     <width>639</width>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -69,10 +80,20 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>DynATC</class>
+   <extends>QQuickWidget</extends>
+   <header>QtPyVCP.widgets.display_widgets.atc_widget.atc</header>
+  </customwidget>
+  <customwidget>
    <class>VCPMainWindow</class>
    <extends>QMainWindow</extends>
    <header>QtPyVCP.widgets.form_widgets.main_window</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QQuickWidget</class>
+   <extends>QWidget</extends>
+   <header>QtQuickWidgets/QQuickWidget</header>
   </customwidget>
  </customwidgets>
  <resources/>
