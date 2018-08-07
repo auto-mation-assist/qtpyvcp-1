@@ -6,7 +6,8 @@ Rectangle {
     visible: true
     width: 600
     height: 400
-    color: "whitesmoke"
+    color: "#00000000"
+    border.color: "#00000000"
 
     GridLayout {
         anchors.top: parent.top
