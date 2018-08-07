@@ -32,7 +32,7 @@ Rectangle {
 
             onClicked: {
                 // Invoke the calculator slot to sum the numbers
-                atc.rotate(1)
+                atc_holder.rotate(1)
             }
         }
     }
