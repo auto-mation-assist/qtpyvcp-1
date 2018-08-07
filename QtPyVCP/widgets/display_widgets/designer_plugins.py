@@ -29,3 +29,10 @@ class CameraPlugin(_DesignerPlugin):
         return "Camera widget"
     def isContainer(self):
         return True
+
+from atc_widget.atc import DynATC
+class DynATCPlugin(_DesignerPlugin):
+    def pluginClass(self):
+        return DynATC
+    def toolTip(self):
+        return "DynATC widget"
