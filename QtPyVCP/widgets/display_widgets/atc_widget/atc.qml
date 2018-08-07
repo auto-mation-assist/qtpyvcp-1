@@ -33,8 +33,12 @@ Rectangle {
 
             onClicked: {
                 // Invoke the calculator slot to sum the numbers
-                tool_changer.rotate_atc(1)
+                main.rotate_atc(1)
             }
+        }
+        TextField {
+            id: tool_num
+            placeholderText: qsTr("Enter Tool")
         }
     }
 
@@ -50,9 +54,19 @@ Rectangle {
         transformOrigin: Item.Center
         source: "images/carousel_12.png"
 
-        property int rotate_plus: 360/12
-        property int rotate_minus: 360/12
-        property int back: 3
+
+        RotationAnimator {
+            id: atc_anim
+            target: atc_holder;
+            duration: 3000
+            running: false
+
+            easing {
+                type: Easing.OutElastic
+                amplitude: 1
+                period: 0.5
+            }
+        }
 
         Rectangle {
             id: tool_1
@@ -63,6 +77,19 @@ Rectangle {
             color: "#ffffff"
             radius: 21
             border.width: 2
+
+            RotationAnimator {
+                id: tool_anim_1
+                target: tool_1;
+                duration: 3000
+                running: false
+
+                easing {
+                    type: Easing.OutElastic
+                    amplitude: 1
+                    period: 0.5
+                }
+            }
 
             Text {
                 id: tool_text_1
@@ -86,6 +113,19 @@ Rectangle {
             radius: 21
             border.width: 2
 
+            RotationAnimator {
+                id: tool_anim_2
+                target: tool_2;
+                duration: 3000
+                running: false
+
+                easing {
+                    type: Easing.OutElastic
+                    amplitude: 1
+                    period: 0.5
+                }
+            }
+
             Text {
                 id: tool_text_2
                 x: 8
@@ -107,6 +147,19 @@ Rectangle {
             color: "#ffffff"
             radius: 21
             border.width: 2
+
+            RotationAnimator {
+                id: tool_anim_3
+                target: tool_3;
+                duration: 3000
+                running: false
+
+                easing {
+                    type: Easing.OutElastic
+                    amplitude: 1
+                    period: 0.5
+                }
+            }
 
             Text {
                 id: tool_text_3
@@ -130,6 +183,19 @@ Rectangle {
             radius: 21
             border.width: 2
 
+            RotationAnimator {
+                id: tool_anim_4
+                target: tool_4;
+                duration: 3000
+                running: false
+
+                easing {
+                    type: Easing.OutElastic
+                    amplitude: 1
+                    period: 0.5
+                }
+            }
+
             Text {
                 id: tool_text_4
                 x: 8
@@ -151,6 +217,19 @@ Rectangle {
             color: "#ffffff"
             radius: 21
             border.width: 2
+
+            RotationAnimator {
+                id: tool_anim_5
+                target: tool_5;
+                duration: 3000
+                running: false
+
+                easing {
+                    type: Easing.OutElastic
+                    amplitude: 1
+                    period: 0.5
+                }
+            }
 
             Text {
                 id: tool_text_5
@@ -174,6 +253,19 @@ Rectangle {
             radius: 21
             border.width: 2
 
+            RotationAnimator {
+                id: tool_anim_6
+                target: tool_6;
+                duration: 3000
+                running: false
+
+                easing {
+                    type: Easing.OutElastic
+                    amplitude: 1
+                    period: 0.5
+                }
+            }
+
             Text {
                 id: tool_text_6
                 x: 7
@@ -195,6 +287,19 @@ Rectangle {
             color: "#ffffff"
             radius: 21
             border.width: 2
+
+            RotationAnimator {
+                id: tool_anim_7
+                target: tool_7;
+                duration: 3000
+                running: false
+
+                easing {
+                    type: Easing.OutElastic
+                    amplitude: 1
+                    period: 0.5
+                }
+            }
 
             Text {
                 id: tool_text_7
@@ -218,6 +323,19 @@ Rectangle {
             radius: 21
             border.width: 2
 
+            RotationAnimator {
+                id: tool_anim_8
+                target: tool_8;
+                duration: 3000
+                running: false
+
+                easing {
+                    type: Easing.OutElastic
+                    amplitude: 1
+                    period: 0.5
+                }
+            }
+
             Text {
                 id: tool_text_8
                 x: 7
@@ -239,6 +357,19 @@ Rectangle {
             color: "#ffffff"
             radius: 21
             border.width: 2
+
+            RotationAnimator {
+                id: tool_anim_9
+                target: tool_9;
+                duration: 3000
+                running: false
+
+                easing {
+                    type: Easing.OutElastic
+                    amplitude: 1
+                    period: 0.5
+                }
+            }
 
             Text {
                 id: tool_text_9
@@ -262,6 +393,19 @@ Rectangle {
             radius: 21
             border.width: 2
 
+            RotationAnimator {
+                id: tool_anim_10
+                target: tool_10;
+                duration: 3000
+                running: false
+
+                easing {
+                    type: Easing.OutElastic
+                    amplitude: 1
+                    period: 0.5
+                }
+            }
+
             Text {
                 id: tool_text_10
                 x: 2
@@ -283,6 +427,19 @@ Rectangle {
             color: "#ffffff"
             radius: 21
             border.width: 2
+
+            RotationAnimator {
+                id: tool_anim_11
+                target: tool_11;
+                duration: 3000
+                running: false
+
+                easing {
+                    type: Easing.OutElastic
+                    amplitude: 1
+                    period: 0.5
+                }
+            }
 
             Text {
                 id: tool_text_11
@@ -306,6 +463,19 @@ Rectangle {
             radius: 21
             border.width: 2
 
+            RotationAnimator {
+                id: tool_anim_12
+                target: tool_12;
+                duration: 3000
+                running: false
+
+                easing {
+                    type: Easing.OutElastic
+                    amplitude: 1
+                    period: 0.5
+                }
+            }
+
             Text {
                 id: tool_text_12
                 x: 2
@@ -321,25 +491,62 @@ Rectangle {
 
     // Here we take the result of sum or subtracting numbers
     Connections {
-        target: tool_changer
+        target: main
 
         // Sum signal handler
         onChangeResult: {
-            // sum was set through arguments=['test']
-            atc_holder.rotation = change
+            atc_anim.from = (360/12 * change)
+            atc_anim.to = (360/12 * change + 360/12)
+            atc_anim.restart()
 
-            tool_1.rotation = -change
-            tool_2.rotation = -change
-            tool_3.rotation = -change
-            tool_4.rotation = -change
-            tool_5.rotation = -change
-            tool_6.rotation = -change
-            tool_7.rotation = -change
-            tool_8.rotation = -change
-            tool_9.rotation = -change
-            tool_10.rotation = -change
-            tool_11.rotation = -change
-            tool_12.rotation = -change
+            tool_anim_1.from = -(360/12 * change)
+            tool_anim_1.to = -(360/12 * change + 360/12)
+            tool_anim_1.restart()
+
+            tool_anim_2.from = -(360/12 * change)
+            tool_anim_2.to = -(360/12 * change + 360/12)
+            tool_anim_2.restart()
+
+            tool_anim_3.from = -(360/12 * change)
+            tool_anim_3.to = -(360/12 * change + 360/12)
+            tool_anim_3.restart()
+
+            tool_anim_4.from = -(360/12 * change)
+            tool_anim_4.to = -(360/12 * change + 360/12)
+            tool_anim_4.restart()
+
+            tool_anim_5.from = -(360/12 * change)
+            tool_anim_5.to = -(360/12 * change + 360/12)
+            tool_anim_5.restart()
+
+            tool_anim_6.from = -(360/12 * change)
+            tool_anim_6.to = -(360/12 * change + 360/12)
+            tool_anim_6.restart()
+
+            tool_anim_7.from = -(360/12 * change)
+            tool_anim_7.to = -(360/12 * change + 360/12)
+            tool_anim_7.restart()
+
+            tool_anim_8.from = -(360/12 * change)
+            tool_anim_8.to = -(360/12 * change + 360/12)
+            tool_anim_8.restart()
+
+            tool_anim_9.from = -(360/12 * change)
+            tool_anim_9.to = -(360/12 * change + 360/12)
+            tool_anim_9.restart()
+
+            tool_anim_10.from = -(360/12 * change)
+            tool_anim_10.to = -(360/12 * change + 360/12)
+            tool_anim_10.restart()
+
+            tool_anim_11.from = -(360/12 * change)
+            tool_anim_11.to = -(360/12 * change + 360/12)
+            tool_anim_11.restart()
+
+            tool_anim_12.from = -(360/12 * change)
+            tool_anim_12.to = -(360/12 * change + 360/12)
+            tool_anim_12.restart()
+
         }
     }
 

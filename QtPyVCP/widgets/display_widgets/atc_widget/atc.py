@@ -10,21 +10,20 @@ WIDGET_PATH = os.path.dirname(os.path.abspath(__file__))
 
 class DynATC(QQuickWidget):
 
+    changeResult = pyqtSignal(int, arguments=['change'])
+
     def __init__(self, parent=None):
         super(DynATC, self).__init__(parent)
 
         url = QUrl.fromLocalFile(os.path.join(WIDGET_PATH, "atc.qml"))
         self.setSource(url)
 
-        self.rootContext().setContextProperty("tool_changer", self)
-
+        self.rootContext().setContextProperty("main", self)
 
         self.atc_rotation = 0
-
-    changeResult = pyqtSignal(int, arguments=['change'])
 
     # Slot for summing two numbers
     @pyqtSlot(int)
     def rotate_atc(self):
-        self.atc_rotation += 1
         self.changeResult.emit(self.atc_rotation)
+        self.atc_rotation += 1
