@@ -7,20 +7,24 @@ from PyQt5.QtQuickWidgets import QQuickWidget
 
 WIDGET_PATH = os.path.dirname(os.path.abspath(__file__))
 
+
 class DynATC(QQuickWidget):
 
     def __init__(self, parent=None):
         super(DynATC, self).__init__(parent)
-        self.atc_rotation = 0
 
         url = QUrl.fromLocalFile(os.path.join(WIDGET_PATH, "atc.qml"))
         self.setSource(url)
 
-        self.rootContext().setContextProperty("atc_holder", self)
-        self.rotateResult = pyqtSignal(int, arguments=['rotate'])
+        self.rootContext().setContextProperty("tool_changer", self)
+
+
+        self.atc_rotation = 0
+
+    changeResult = pyqtSignal(int, arguments=['change'])
 
     # Slot for summing two numbers
     @pyqtSlot(int)
-    def rotate(self):
+    def rotate_atc(self):
         self.atc_rotation += 1
-        self.rotateResult.emit(self.atc_rotation)
+        self.changeResult.emit(self.atc_rotation)

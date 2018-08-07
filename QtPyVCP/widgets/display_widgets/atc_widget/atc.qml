@@ -32,7 +32,7 @@ Rectangle {
 
             onClicked: {
                 // Invoke the calculator slot to sum the numbers
-                atc_holder.rotate(1)
+                tool_changer.rotate_atc(1)
             }
         }
     }
@@ -49,8 +49,8 @@ Rectangle {
         transformOrigin: Item.Center
         source: "images/carousel_12.png"
 
-        property int rotate_plus: 33
-        property int rotate_minus: 33
+        property int rotate_plus: 360/12
+        property int rotate_minus: 360/12
         property int back: 3
 
         Rectangle {
@@ -320,86 +320,26 @@ Rectangle {
 
     // Here we take the result of sum or subtracting numbers
     Connections {
-        target: atc_holder
+        target: tool_changer
 
         // Sum signal handler
-        onRotateResult: {
-            // sum was set through arguments=['rotate']
-            atc_holder.rotation = rotate
+        onChangeResult: {
+            // sum was set through arguments=['test']
+            atc_holder.rotation = change
 
-            tool_1.rotation = -rotate
-            tool_2.rotation = -rotate
-            tool_3.rotation = -rotate
-            tool_4.rotation = -rotate
-            tool_5.rotation = -rotate
-            tool_6.rotation = -rotate
-            tool_7.rotation = -rotate
-            tool_8.rotation = -rotate
-            tool_9.rotation = -rotate
-            tool_10.rotation = -rotate
-            tool_11.rotation = -rotate
-            tool_12.rotation = -rotate
+            tool_1.rotation = -change
+            tool_2.rotation = -change
+            tool_3.rotation = -change
+            tool_4.rotation = -change
+            tool_5.rotation = -change
+            tool_6.rotation = -change
+            tool_7.rotation = -change
+            tool_8.rotation = -change
+            tool_9.rotation = -change
+            tool_10.rotation = -change
+            tool_11.rotation = -change
+            tool_12.rotation = -change
         }
-    }
-
-    Connections {
-        target: tool_1
-        onClicked: print("clicked")
-    }
-
-    Connections {
-        target: tool_2
-        onClicked: print("clicked")
-    }
-
-    Connections {
-        target: tool_3
-        onClicked: print("clicked")
-    }
-
-    Connections {
-        target: tool_4
-        onClicked: print("clicked")
-    }
-
-    Connections {
-        target: tool_5
-        onClicked: print("clicked")
-    }
-
-    Connections {
-        target: tool_6
-        onClicked: print("clicked")
-    }
-
-    Connections {
-        target: tool_7
-        onClicked: print("clicked")
-    }
-
-    Connections {
-        target: tool_8
-        onClicked: print("clicked")
-    }
-
-    Connections {
-        target: tool_9
-        onClicked: print("clicked")
-    }
-
-    Connections {
-        target: tool_10
-        onClicked: print("clicked")
-    }
-
-    Connections {
-        target: tool_11
-        onClicked: print("clicked")
-    }
-
-    Connections {
-        target: tool_12
-        onClicked: print("clicked")
     }
 
 }
