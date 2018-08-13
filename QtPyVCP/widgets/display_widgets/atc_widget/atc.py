@@ -1,5 +1,13 @@
 import os
 
+# Workarround for nvidia propietary drivers
+
+import ctypes
+import ctypes.util
+ctypes.CDLL(ctypes.util.find_library("GL"), mode=ctypes.RTLD_GLOBAL)
+
+# end of Workarround
+
 from PyQt5.QtGui import QGuiApplication
 from PyQt5.QtQml import QQmlApplicationEngine
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, QUrl

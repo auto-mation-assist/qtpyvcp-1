@@ -2,12 +2,10 @@ import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.2
 
-Rectangle {
+Item {
     visible: true
     width: 600
     height: 400
-    color: "#00000000"
-    border.color: "#00000000"
 
     GridLayout {
         anchors.top: parent.top
