@@ -45,6 +45,8 @@ from QtPyVCP.utilities import action
 from QtPyVCP.widgets.dialogs.open_file_dialog import OpenFileDialog
 from QtPyVCP.utilities import action
 
+from QtPyVCP.widgets.dialog_widgets import IntKeypad
+
 
 class VCPMainWindow(QMainWindow):
 
@@ -59,6 +61,8 @@ class VCPMainWindow(QMainWindow):
         self.log_file_path = ''
         self.actions = []
         self.open_file_dialog = OpenFileDialog(self)
+
+        self.int_keypad = IntKeypad(parent=self)
 
         # Load the UI file AFTER defining variables, otherwise the values
         # set in QtDesigner get overridden by the default values
@@ -116,6 +120,11 @@ class VCPMainWindow(QMainWindow):
             event.accept()
 
     def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            if self.int_keypad.isVisible():
+                self.int_keypad.hide()
+                return
+
         # super(VCPMainWindow, self).keyPressEvent(event)
         if event.isAutoRepeat():
             return
@@ -162,8 +171,10 @@ class VCPMainWindow(QMainWindow):
             focused_widget.clearFocus()
 
     def focusChangedEvent(self, old_w, new_w):
+        self.int_keypad.hide()
         if issubclass(new_w.__class__, QLineEdit):
             print "QLineEdit got focus: ", new_w
+            self.int_keypad.popup(new_w)
 
 #==============================================================================
 #  menu action slots
