@@ -31,7 +31,7 @@ Item {
 
             onClicked: {
                 // Invoke the calculator slot to sum the numbers
-                main.rotate_atc(1)
+                main.rotate_forward(1)
             }
         }
         TextField {
@@ -487,62 +487,71 @@ Item {
         }
     }
 
+    Timer {
+        id: halTimer
+        interval: 100
+        repeat: true
+        running: true
+        triggeredOnStart: true
+        onTriggered: main.get_pins()
+    }
+
     // Here we take the result of sum or subtracting numbers
     Connections {
         target: main
 
         // Sum signal handler
-        onChangeResult: {
-            atc_anim.from = (360/12 * change)
-            atc_anim.to = (360/12 * change + 360/12)
+        onRotateSig: {
+            atc_anim.from = (360/12 * rotate_forward)
+            atc_anim.to = (360/12 * rotate_forward + 360/12)
             atc_anim.restart()
 
-            tool_anim_1.from = -(360/12 * change)
-            tool_anim_1.to = -(360/12 * change + 360/12)
+            tool_anim_1.from = -(360/12 * rotate_forward)
+            tool_anim_1.to = -(360/12 * rotate_forward + 360/12)
             tool_anim_1.restart()
 
-            tool_anim_2.from = -(360/12 * change)
-            tool_anim_2.to = -(360/12 * change + 360/12)
+            tool_anim_2.from = -(360/12 * rotate_forward)
+            tool_anim_2.to = -(360/12 * rotate_forward + 360/12)
             tool_anim_2.restart()
 
-            tool_anim_3.from = -(360/12 * change)
-            tool_anim_3.to = -(360/12 * change + 360/12)
+            tool_anim_3.from = -(360/12 * rotate_forward)
+            tool_anim_3.to = -(360/12 * rotate_forward + 360/12)
             tool_anim_3.restart()
 
-            tool_anim_4.from = -(360/12 * change)
-            tool_anim_4.to = -(360/12 * change + 360/12)
+            tool_anim_4.from = -(360/12 * rotate_forward)
+            tool_anim_4.to = -(360/12 * rotate_forward + 360/12)
             tool_anim_4.restart()
 
-            tool_anim_5.from = -(360/12 * change)
-            tool_anim_5.to = -(360/12 * change + 360/12)
+            tool_anim_5.from = -(360/12 * rotate_forward)
+            tool_anim_5.to = -(360/12 * rotate_forward + 360/12)
             tool_anim_5.restart()
 
-            tool_anim_6.from = -(360/12 * change)
-            tool_anim_6.to = -(360/12 * change + 360/12)
+            tool_anim_6.from = -(360/12 * rotate_forward)
+            tool_anim_6.to = -(360/12 * rotate_forward + 360/12)
             tool_anim_6.restart()
 
-            tool_anim_7.from = -(360/12 * change)
-            tool_anim_7.to = -(360/12 * change + 360/12)
+            tool_anim_7.from = -(360/12 * rotate_forward)
+            tool_anim_7.to = -(360/12 * rotate_forward + 360/12)
             tool_anim_7.restart()
 
-            tool_anim_8.from = -(360/12 * change)
-            tool_anim_8.to = -(360/12 * change + 360/12)
+            tool_anim_8.from = -(360/12 * rotate_forward)
+            tool_anim_8.to = -(360/12 * rotate_forward + 360/12)
             tool_anim_8.restart()
 
-            tool_anim_9.from = -(360/12 * change)
-            tool_anim_9.to = -(360/12 * change + 360/12)
+            tool_anim_9.from = -(360/12 * rotate_forward)
+            tool_anim_9.to = -(360/12 * rotate_forward + 360/12)
             tool_anim_9.restart()
 
-            tool_anim_10.from = -(360/12 * change)
-            tool_anim_10.to = -(360/12 * change + 360/12)
+            tool_anim_10.from = -(360/12 * rotate_forward)
+            tool_anim_10.to = -(360/12 * rotate_forward + 360/12)
             tool_anim_10.restart()
 
-            tool_anim_11.from = -(360/12 * change)
-            tool_anim_11.to = -(360/12 * change + 360/12)
+            tool_anim_11.from = -(360/12 * rotate_forward)
+            tool_anim_11.to = -(360/12 * rotate_forward + 360/12)
             tool_anim_11.restart()
 
-            tool_anim_12.from = -(360/12 * change)
-            tool_anim_12.to = -(360/12 * change + 360/12)
+            tool_anim_12.from = -(360/12 * rotate_forward)
+            tool_anim_12.to = -(360/12 * rotate_forward + 360/12)
             tool_anim_12.restart()
 
         }
