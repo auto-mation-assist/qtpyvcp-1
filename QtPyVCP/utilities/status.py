@@ -105,7 +105,7 @@ class _Status(QObject):
             5: "Error",
         },
         "g5x_index": ["G53", "G54", "G55", "G56", "G57", "G58", "G59", "G59.1", "G59.2", "G59.3"],
-        "program_units": ["Unknown", "Inch", "Metric", "Centimeters"],
+        "program_units": ["NA", "in", "mm", "cm"],
         "gcodes": GCodes(),
         "mcodes": MCodes(),
     }
@@ -154,7 +154,7 @@ class _Status(QObject):
     gcodes = pyqtSignal([tuple], [str])     # active G-codes for each modal group
 
     # Home and Limit
-    homed = pyqtSignal(tuple)               # homes self.stat for each axis??
+    homed = pyqtSignal(tuple)               # homed flag for each joint
     inpos = pyqtSignal(bool)                # machine-in-position flag
     limit = pyqtSignal(tuple)               # axis limit self.status masks
 
@@ -198,6 +198,7 @@ class _Status(QObject):
     feedrate = pyqtSignal(float)            # feed-rate override, 0-1
     rapidrate = pyqtSignal(float)           # rapid-rate override, 0-1
     spindlerate = pyqtSignal(float)         # spindle-rate override, 0-1
+    max_velocity = pyqtSignal(float)        # max velocity in machine units/s
     feed_override_enabled = pyqtSignal(bool)# enable flag for feed override
     adaptive_feed_enabled = pyqtSignal(bool)# self.status of adaptive feedrate override
 
@@ -264,7 +265,7 @@ class _Status(QObject):
             pass
 
         excluded_items = ['axes', 'axis', 'joint', 'cycle_time', 'linear_units',
-            'angular_units', 'acceleration', 'max_velocity', 'kinematics_type',
+            'angular_units', 'acceleration', 'kinematics_type',
             'joints', 'settings', 'axis_mask', 'max_acceleration', 'echo_serial_number',
             'id', 'poll', 'command', 'debug']
 
@@ -340,6 +341,11 @@ class _Status(QObject):
 
 
     #===========================  Helper Functions  ===========================
+
+    def setJogIncrement(self, raw_increment):
+        self.jog_increment = raw_increment
+        # print "changed increment", raw_increment
+        # TODO: parse raw increment including units
 
     def setReportActualPosition(self, report_actual):
         # reports commanded by default
