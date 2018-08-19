@@ -34,10 +34,3 @@ from load_meter import LoadMeter
 class LoadMeterPlugin(_DesignerPlugin):
     def pluginClass(self):
         return LoadMeter
-
-from atc_widget.atc import DynATC
-class DynATCPlugin(_DesignerPlugin):
-    def pluginClass(self):
-        return DynATC
-    def toolTip(self):
-        return "DynATC widget"

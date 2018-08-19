@@ -48,3 +48,11 @@ from jog_increment import JogIncrementWidget
 class JogIncrementPlugin(_DesignerPlugin):
     def pluginClass(self):
         return JogIncrementWidget
+
+
+from atc_widget.atc import DynATC
+class DynATCPlugin(_DesignerPlugin):
+    def pluginClass(self):
+        return DynATC
+    def toolTip(self):
+        return "DynATC widget"
