@@ -46,7 +46,7 @@ Item {
     Image {
         id: atc_holder
         x: 143
-        y: 43
+        y: 58
         width: 314
         height: 314
         antialiasing: true

@@ -39,14 +39,11 @@ class DynATC(QQuickWidget):
 
     def _initComp(self):
 
-        halcomp = component("lol")
-
-        if not component_exists("lol"):
-            print("NONONONO")
+        halcomp = component("atc_widget")
 
         halcomp.newpin("fwd", HAL_BIT, HAL_IN)
         halcomp.newpin("rev", HAL_BIT, HAL_IN)
-        # halcomp.ready()
+        halcomp.ready()
 
         return halcomp
 
