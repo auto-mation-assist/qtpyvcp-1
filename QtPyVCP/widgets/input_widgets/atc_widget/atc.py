@@ -37,26 +37,31 @@ class DynATC(QQuickWidget, QObject):
 
         self.halcomp = hal.component("atc_widget")
         self.halcomp.newpin("tool", hal.HAL_FLOAT, hal.HAL_IN)
-        hal.new_sig("rotate", hal.HAL_FLOAT)
 
         self.halcomp.ready()
 
-    rotateSig = pyqtSignal(int, arguments=['rotate_forward'])
+    rotateFwdSig = pyqtSignal(int, arguments=['rotate_forward'])
     # Slot for summing two numbers
     @pyqtSlot(int)
     def rotate_forward(self, value):
-        self.rotateSig.emit(self.atc_rotation)
+        self.rotateFwdSig.emit(self.atc_rotation)
         self.atc_rotation += 1
 
+    rotateRevSig = pyqtSignal(int, arguments=['rotate_reverse'])
+    # Slot for summing two numbers
+    @pyqtSlot(int)
+    def rotate_reverse(self, value):
+        self.rotateRevSig.emit(self.atc_rotation)
+        self.atc_rotation -= 1
+
+
+    """
     pinSig = pyqtSignal(arguments=['get_pins'])
     # Slot for summing two numbers
     @pyqtSlot()
     def get_pins(self):
-
-        hal.connect('atc_widget.tool', 'rotate')
-
         self.atc_tool = self.halcomp["tool"]
         if self.atc_tool != self.atc_previous_tool:
             self.rotateSig.emit(self.atc_rotation)
             self.atc_previous_tool = self.atc_tool
-
+    """
