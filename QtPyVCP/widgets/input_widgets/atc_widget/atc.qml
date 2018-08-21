@@ -2,10 +2,11 @@ import QtQuick 2.7
 import QtQuick.Controls 1.5
 import QtQuick.Layouts 1.3
 
-Item {
+Rectangle {
     visible: true
-    width: 600
-    height: 400
+    width: 550
+    color: "#919191"
+    height: 550
 
     GridLayout {
         anchors.top: parent.top
@@ -45,10 +46,10 @@ Item {
 
     Image {
         id: atc_holder
-        x: 143
-        y: 58
-        width: 314
-        height: 314
+        x: 13
+        y: 14
+        width: 524
+        height: 523
         antialiasing: true
         z: 0
         rotation: 0
@@ -65,8 +66,8 @@ Item {
 
         Rectangle {
             id: tool_1
-            x: 271
-            y: 136
+            x: 467
+            y: 239
             width: 42
             height: 42
             color: "#ffffff"
@@ -94,8 +95,8 @@ Item {
 
         Rectangle {
             id: tool_2
-            x: 253
-            y: 68
+            x: 431
+            y: 129
             width: 42
             height: 42
             color: "#ffffff"
@@ -123,8 +124,8 @@ Item {
 
         Rectangle {
             id: tool_3
-            x: 204
-            y: 19
+            x: 352
+            y: 49
             width: 42
             height: 42
             color: "#ffffff"
@@ -152,8 +153,8 @@ Item {
 
         Rectangle {
             id: tool_4
-            x: 136
-            y: 1
+            x: 240
+            y: 17
             width: 42
             height: 42
             color: "#ffffff"
@@ -181,8 +182,8 @@ Item {
 
         Rectangle {
             id: tool_5
-            x: 68
-            y: 19
+            x: 127
+            y: 49
             width: 42
             height: 42
             color: "#ffffff"
@@ -210,8 +211,8 @@ Item {
 
         Rectangle {
             id: tool_6
-            x: 19
-            y: 69
+            x: 40
+            y: 127
             width: 42
             height: 42
             color: "#ffffff"
@@ -239,8 +240,8 @@ Item {
 
         Rectangle {
             id: tool_7
-            x: 1
-            y: 136
+            x: 6
+            y: 238
             width: 42
             height: 42
             color: "#ffffff"
@@ -268,8 +269,8 @@ Item {
 
         Rectangle {
             id: tool_8
-            x: 19
-            y: 204
+            x: 43
+            y: 351
             width: 42
             height: 42
             color: "#ffffff"
@@ -297,8 +298,8 @@ Item {
 
         Rectangle {
             id: tool_9
-            x: 68
-            y: 253
+            x: 127
+            y: 435
             width: 42
             height: 42
             color: "#ffffff"
@@ -326,8 +327,8 @@ Item {
 
         Rectangle {
             id: tool_10
-            x: 136
-            y: 271
+            x: 241
+            y: 465
             width: 42
             height: 42
             color: "#ffffff"
@@ -355,8 +356,8 @@ Item {
 
         Rectangle {
             id: tool_11
-            x: 204
-            y: 253
+            x: 352
+            y: 435
             width: 42
             height: 42
             color: "#ffffff"
@@ -384,8 +385,8 @@ Item {
 
         Rectangle {
             id: tool_12
-            x: 253
-            y: 203
+            x: 435
+            y: 353
             width: 42
             height: 42
             color: "#ffffff"

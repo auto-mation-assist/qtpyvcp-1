@@ -1,0 +1,3 @@
+
+net atc-fwd atc_widget.fwd <= motion.digital-out-03
+net atc-rev atc_widget.rev <= motion.digital-out-04

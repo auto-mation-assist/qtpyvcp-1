@@ -1,0 +1,3 @@
+
+net atc-fwd atc_widget.fwd <= hm2_7i92.0.7i76.0.3.output-05 <= motion.digital-out-03
+net atc-rev atc_widget.rev <= hm2_7i92.0.7i76.0.3.output-06 <= motion.digital-out-04

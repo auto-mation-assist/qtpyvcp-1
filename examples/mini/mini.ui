@@ -6,20 +6,56 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>639</width>
-    <height>441</height>
+    <width>779</width>
+    <height>775</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="DynATC" name="dynatc"/>
+    </item>
+    <item>
+     <widget class="AxisActionButton" name="axisactionbutton">
+      <property name="action_id" stdset="0">
+       <enum>AxisActionButton::Home</enum>
+      </property>
+      <property name="axis">
+       <enum>AxisActionButton::ALL</enum>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="ActionButton" name="actionbutton_2">
+      <property name="action_id" stdset="0">
+       <enum>ActionButton::MachinePower</enum>
+      </property>
+      <property name="action_type" stdset="0">
+       <enum>ActionButton::Toggle</enum>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="ActionButton" name="actionbutton">
+      <property name="action_id" stdset="0">
+       <enum>ActionButton::EmergencyStop</enum>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="MDIEntry" name="mdientry"/>
+    </item>
+   </layout>
+  </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>639</width>
+     <width>779</width>
      <height>25</height>
     </rect>
    </property>
@@ -69,10 +105,35 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>DynATC</class>
+   <extends>QQuickWidget</extends>
+   <header>QtPyVCP.widgets.input_widgets.atc_widget.atc</header>
+  </customwidget>
+  <customwidget>
+   <class>ActionButton</class>
+   <extends>QPushButton</extends>
+   <header>QtPyVCP.widgets.button_widgets.action_button</header>
+  </customwidget>
+  <customwidget>
    <class>VCPMainWindow</class>
    <extends>QMainWindow</extends>
    <header>QtPyVCP.widgets.form_widgets.main_window</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MDIEntry</class>
+   <extends>QLineEdit</extends>
+   <header>QtPyVCP.widgets.input_widgets.mdientry_widget</header>
+  </customwidget>
+  <customwidget>
+   <class>AxisActionButton</class>
+   <extends>QPushButton</extends>
+   <header>QtPyVCP.widgets.button_widgets.axis_button</header>
+  </customwidget>
+  <customwidget>
+   <class>QQuickWidget</class>
+   <extends>QWidget</extends>
+   <header>QtQuickWidgets/QQuickWidget</header>
   </customwidget>
  </customwidgets>
  <resources/>
