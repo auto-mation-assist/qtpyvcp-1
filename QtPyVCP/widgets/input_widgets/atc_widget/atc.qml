@@ -1,6 +1,6 @@
-import QtQuick 2.5
-import QtQuick.Controls 1.4
-import QtQuick.Layouts 1.2
+import QtQuick 2.7
+import QtQuick.Controls 1.5
+import QtQuick.Layouts 1.3
 
 Item {
     visible: true
@@ -417,7 +417,7 @@ Item {
         interval: 100
         repeat: true
         running: true
-        triggeredOnStart: true
+        triggeredOnStart: false
         onTriggered: atc_spiner.get_pins()
     }
 
@@ -434,6 +434,7 @@ Item {
             name.restart()
         }
     }
+
     function rotate_tool(name, tool_no, direction) {
         if (direction === 1) {
             name.from = -(360/12 * tool_no)
@@ -446,10 +447,10 @@ Item {
             name.restart()
         }
     }
-    // Here we take the result of sum or subtracting numbers
+
     Connections {
         target: atc_spiner
-        // Sum signal handler
+
         onRotateFwdSig: {
             rotate_atc(atc_anim, rotate_forward, 1)
 
@@ -468,7 +469,6 @@ Item {
 
         }
 
-        // Sum signal handler
         onRotateRevSig: {
             rotate_atc(atc_anim, rotate_reverse, -1)
 
