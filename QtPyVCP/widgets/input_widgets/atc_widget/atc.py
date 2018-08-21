@@ -30,8 +30,10 @@ def _initComp():
 class DynATC(QQuickWidget):
 
     def __init__(self, parent=None):
-
         super(DynATC, self).__init__(parent)
+
+        if parent is None:
+            return
 
         self.engine().rootContext().setContextProperty("atc_spiner", self)
         url = QUrl.fromLocalFile(os.path.join(WIDGET_PATH, "atc.qml"))
