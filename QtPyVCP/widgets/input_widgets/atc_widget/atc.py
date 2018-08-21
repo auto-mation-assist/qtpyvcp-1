@@ -19,9 +19,9 @@ WIDGET_PATH = os.path.dirname(os.path.abspath(__file__))
 
 def _initComp():
     halcomp = component("atc_widget")
-
     halcomp.newpin("fwd", HAL_BIT, HAL_IN)
     halcomp.newpin("rev", HAL_BIT, HAL_IN)
+    halcomp.newpin("count", HAL_BIT, HAL_IN)
     halcomp.ready()
 
     return halcomp
@@ -47,6 +47,7 @@ class DynATC(QQuickWidget):
         self.atc_rotation = 0
 
     rotateFwdSig = pyqtSignal(int, arguments=['rotate_forward'])
+
     # Slot for summing two numbers
     @pyqtSlot(int)
     def rotate_forward(self, value):
@@ -55,6 +56,7 @@ class DynATC(QQuickWidget):
         self.atc_rotation += 1
 
     rotateRevSig = pyqtSignal(int, arguments=['rotate_reverse'])
+
     # Slot for summing two numbers
     @pyqtSlot(int)
     def rotate_reverse(self, value):
@@ -63,6 +65,7 @@ class DynATC(QQuickWidget):
         self.atc_rotation -= 1
 
     pinSig = pyqtSignal(arguments=['get_pins'])
+
     # Slot for summing two numbers
     @pyqtSlot()
     def get_pins(self):
