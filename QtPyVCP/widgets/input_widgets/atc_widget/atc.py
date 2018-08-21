@@ -21,7 +21,6 @@ def _initComp():
     halcomp = component("atc_widget")
     halcomp.newpin("fwd", HAL_BIT, HAL_IN)
     halcomp.newpin("rev", HAL_BIT, HAL_IN)
-    halcomp.newpin("count", HAL_BIT, HAL_IN)
     halcomp.ready()
 
     return halcomp
