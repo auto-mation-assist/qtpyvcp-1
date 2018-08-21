@@ -18,19 +18,27 @@ Item {
         rowSpacing: 10
         columnSpacing: 10
 
-        // Input field of the first number
-
-
-
         Button {
             height: 40
             Layout.fillWidth: true
-            text: qsTr("Do it")
+            text: qsTr("Forward")
 
             Layout.columnSpan: 2
 
             onClicked: {
                 atc_spiner.rotate_forward(1)
+            }
+        }
+
+        Button {
+            height: 40
+            Layout.fillWidth: true
+            text: qsTr("Reverse")
+
+            Layout.columnSpan: 2
+
+            onClicked: {
+                atc_spiner.rotate_reverse(-1)
             }
         }
     }
@@ -51,14 +59,8 @@ Item {
         RotationAnimator {
             id: atc_anim
             target: atc_holder;
-            duration: 3000
+            duration: 1000
             running: false
-
-            easing {
-                type: Easing.OutElastic
-                amplitude: 1
-                period: 0.5
-            }
         }
 
         Rectangle {
@@ -74,14 +76,8 @@ Item {
             RotationAnimator {
                 id: tool_anim_1
                 target: tool_1;
-                duration: 3000
+                duration: 1000
                 running: false
-
-                easing {
-                    type: Easing.OutElastic
-                    amplitude: 1
-                    period: 0.5
-                }
             }
 
             Text {
@@ -109,14 +105,8 @@ Item {
             RotationAnimator {
                 id: tool_anim_2
                 target: tool_2;
-                duration: 3000
+                duration: 1000
                 running: false
-
-                easing {
-                    type: Easing.OutElastic
-                    amplitude: 1
-                    period: 0.5
-                }
             }
 
             Text {
@@ -144,14 +134,8 @@ Item {
             RotationAnimator {
                 id: tool_anim_3
                 target: tool_3;
-                duration: 3000
+                duration: 1000
                 running: false
-
-                easing {
-                    type: Easing.OutElastic
-                    amplitude: 1
-                    period: 0.5
-                }
             }
 
             Text {
@@ -179,14 +163,8 @@ Item {
             RotationAnimator {
                 id: tool_anim_4
                 target: tool_4;
-                duration: 3000
+                duration: 1000
                 running: false
-
-                easing {
-                    type: Easing.OutElastic
-                    amplitude: 1
-                    period: 0.5
-                }
             }
 
             Text {
@@ -214,14 +192,8 @@ Item {
             RotationAnimator {
                 id: tool_anim_5
                 target: tool_5;
-                duration: 3000
+                duration: 1000
                 running: false
-
-                easing {
-                    type: Easing.OutElastic
-                    amplitude: 1
-                    period: 0.5
-                }
             }
 
             Text {
@@ -249,14 +221,8 @@ Item {
             RotationAnimator {
                 id: tool_anim_6
                 target: tool_6;
-                duration: 3000
+                duration: 1000
                 running: false
-
-                easing {
-                    type: Easing.OutElastic
-                    amplitude: 1
-                    period: 0.5
-                }
             }
 
             Text {
@@ -284,14 +250,8 @@ Item {
             RotationAnimator {
                 id: tool_anim_7
                 target: tool_7;
-                duration: 3000
+                duration: 1000
                 running: false
-
-                easing {
-                    type: Easing.OutElastic
-                    amplitude: 1
-                    period: 0.5
-                }
             }
 
             Text {
@@ -319,14 +279,8 @@ Item {
             RotationAnimator {
                 id: tool_anim_8
                 target: tool_8;
-                duration: 3000
+                duration: 1000
                 running: false
-
-                easing {
-                    type: Easing.OutElastic
-                    amplitude: 1
-                    period: 0.5
-                }
             }
 
             Text {
@@ -354,14 +308,8 @@ Item {
             RotationAnimator {
                 id: tool_anim_9
                 target: tool_9;
-                duration: 3000
+                duration: 1000
                 running: false
-
-                easing {
-                    type: Easing.OutElastic
-                    amplitude: 1
-                    period: 0.5
-                }
             }
 
             Text {
@@ -389,14 +337,8 @@ Item {
             RotationAnimator {
                 id: tool_anim_10
                 target: tool_10;
-                duration: 3000
+                duration: 1000
                 running: false
-
-                easing {
-                    type: Easing.OutElastic
-                    amplitude: 1
-                    period: 0.5
-                }
             }
 
             Text {
@@ -424,14 +366,8 @@ Item {
             RotationAnimator {
                 id: tool_anim_11
                 target: tool_11;
-                duration: 3000
+                duration: 1000
                 running: false
-
-                easing {
-                    type: Easing.OutElastic
-                    amplitude: 1
-                    period: 0.5
-                }
             }
 
             Text {
@@ -459,14 +395,8 @@ Item {
             RotationAnimator {
                 id: tool_anim_12
                 target: tool_12;
-                duration: 3000
+                duration: 1000
                 running: false
-
-                easing {
-                    type: Easing.OutElastic
-                    amplitude: 1
-                    period: 0.5
-                }
             }
 
             Text {
@@ -556,55 +486,55 @@ Item {
         // Sum signal handler
         onRotateRevSig: {
             atc_anim.from = (360/12 * rotate_reverse)
-            atc_anim.to = (360/12 * rotate_reverse + 360/12)
+            atc_anim.to = (360/12 * rotate_reverse - 360/12)
             atc_anim.restart()
 
             tool_anim_1.from = -(360/12 * rotate_reverse)
-            tool_anim_1.to = -(360/12 * rotate_reverse + 360/12)
+            tool_anim_1.to = -(360/12 * rotate_reverse - 360/12)
             tool_anim_1.restart()
 
             tool_anim_2.from = -(360/12 * rotate_reverse)
-            tool_anim_2.to = -(360/12 * rotate_reverse + 360/12)
+            tool_anim_2.to = -(360/12 * rotate_reverse - 360/12)
             tool_anim_2.restart()
 
             tool_anim_3.from = -(360/12 * rotate_reverse)
-            tool_anim_3.to = -(360/12 * rotate_reverse + 360/12)
+            tool_anim_3.to = -(360/12 * rotate_reverse - 360/12)
             tool_anim_3.restart()
 
             tool_anim_4.from = -(360/12 * rotate_reverse)
-            tool_anim_4.to = -(360/12 * rotate_reverse + 360/12)
+            tool_anim_4.to = -(360/12 * rotate_reverse - 360/12)
             tool_anim_4.restart()
 
             tool_anim_5.from = -(360/12 * rotate_reverse)
-            tool_anim_5.to = -(360/12 * rotate_reverse + 360/12)
+            tool_anim_5.to = -(360/12 * rotate_reverse - 360/12)
             tool_anim_5.restart()
 
             tool_anim_6.from = -(360/12 * rotate_reverse)
-            tool_anim_6.to = -(360/12 * rotate_reverse + 360/12)
+            tool_anim_6.to = -(360/12 * rotate_reverse - 360/12)
             tool_anim_6.restart()
 
             tool_anim_7.from = -(360/12 * rotate_reverse)
-            tool_anim_7.to = -(360/12 * rotate_reverse + 360/12)
+            tool_anim_7.to = -(360/12 * rotate_reverse - 360/12)
             tool_anim_7.restart()
 
             tool_anim_8.from = -(360/12 * rotate_reverse)
-            tool_anim_8.to = -(360/12 * rotate_reverse + 360/12)
+            tool_anim_8.to = -(360/12 * rotate_reverse - 360/12)
             tool_anim_8.restart()
 
             tool_anim_9.from = -(360/12 * rotate_reverse)
-            tool_anim_9.to = -(360/12 * rotate_reverse + 360/12)
+            tool_anim_9.to = -(360/12 * rotate_reverse - 360/12)
             tool_anim_9.restart()
 
             tool_anim_10.from = -(360/12 * rotate_reverse)
-            tool_anim_10.to = -(360/12 * rotate_reverse + 360/12)
+            tool_anim_10.to = -(360/12 * rotate_reverse - 360/12)
             tool_anim_10.restart()
 
             tool_anim_11.from = -(360/12 * rotate_reverse)
-            tool_anim_11.to = -(360/12 * rotate_reverse + 360/12)
+            tool_anim_11.to = -(360/12 * rotate_reverse - 360/12)
             tool_anim_11.restart()
 
             tool_anim_12.from = -(360/12 * rotate_reverse)
-            tool_anim_12.to = -(360/12 * rotate_reverse + 360/12)
+            tool_anim_12.to = -(360/12 * rotate_reverse - 360/12)
             tool_anim_12.restart()
 
         }
