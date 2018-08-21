@@ -33,8 +33,7 @@ class DynATC(QQuickWidget):
 
         super(DynATC, self).__init__(parent)
 
-        self.rootContext().setContextProperty("atc_spiner", self)
-
+        self.engine().rootContext().setContextProperty("atc_spiner", self)
         url = QUrl.fromLocalFile(os.path.join(WIDGET_PATH, "atc.qml"))
         self.setSource(url)
 
