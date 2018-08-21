@@ -30,13 +30,8 @@ Item {
             Layout.columnSpan: 2
 
             onClicked: {
-                // Invoke the calculator slot to sum the numbers
-                main.rotate_forward(1)
+                atc_spiner.rotate_forward(1)
             }
-        }
-        TextField {
-            id: tool_num
-            placeholderText: qsTr("Enter Tool")
         }
     }
 
@@ -493,12 +488,12 @@ Item {
         repeat: true
         running: true
         triggeredOnStart: true
-        onTriggered: main.get_pins()
+        onTriggered: atc_spiner.get_pins()
     }
 
     // Here we take the result of sum or subtracting numbers
     Connections {
-        target: main
+        target: atc_spiner
         // Sum signal handler
         onRotateFwdSig: {
             atc_anim.from = (360/12 * rotate_forward)
@@ -554,6 +549,10 @@ Item {
             tool_anim_12.restart()
 
         }
+    }
+    Connections {
+        target: atc_spiner
+
         // Sum signal handler
         onRotateRevSig: {
             atc_anim.from = (360/12 * rotate_reverse)
