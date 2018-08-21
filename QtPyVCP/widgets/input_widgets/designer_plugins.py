@@ -55,6 +55,7 @@ class JogIncrementPlugin(_DesignerPlugin):
 
 from atc_widget.atc import DynATC
 
-class DynATCPlugin(object, _DesignerPlugin):
+
+class DynATCPlugin( _DesignerPlugin):
     def pluginClass(self):
         return DynATC
