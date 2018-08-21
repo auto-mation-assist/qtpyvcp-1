@@ -26,7 +26,7 @@ Item {
             Layout.columnSpan: 2
 
             onClicked: {
-                atc_spiner.rotate_forward(1)
+                atc_spiner.rotate_forward()
             }
         }
 
@@ -38,7 +38,7 @@ Item {
             Layout.columnSpan: 2
 
             onClicked: {
-                atc_spiner.rotate_reverse(-1)
+                atc_spiner.rotate_reverse()
             }
         }
     }

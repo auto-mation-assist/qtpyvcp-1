@@ -42,41 +42,42 @@ class DynATC(QQuickWidget):
         except Exception as e:
             self.halcomp = None
 
-        self.atc_tool = 0
-        self.atc_previous_tool = 0
-        self.atc_rotation = 0
+        self.fwd_pin = 0
+        self.rev_pin = 0
+
+        self.atc_counter_pin = 0
+        self.prev_atc_counter_pin = 0
+
+        self.atc_position = 0
 
     rotateFwdSig = pyqtSignal(int, arguments=['rotate_forward'])
-
-    # Slot for summing two numbers
-    @pyqtSlot(int)
-    def rotate_forward(self, value):
-
-        self.rotateFwdSig.emit(self.atc_rotation)
-        self.atc_rotation += 1
+    @pyqtSlot()
+    def rotate_forward(self):
+        self.rotateFwdSig.emit(self.atc_position)
+        self.atc_position += 1
 
     rotateRevSig = pyqtSignal(int, arguments=['rotate_reverse'])
-
-    # Slot for summing two numbers
-    @pyqtSlot(int)
-    def rotate_reverse(self, value):
-
-        self.rotateRevSig.emit(self.atc_rotation)
-        self.atc_rotation -= 1
+    @pyqtSlot()
+    def rotate_reverse(self):
+        self.rotateRevSig.emit(self.atc_position)
+        self.atc_position -= 1
 
     pinSig = pyqtSignal(arguments=['get_pins'])
-
-    # Slot for summing two numbers
     @pyqtSlot()
     def get_pins(self):
+        if self.halcomp is None:
+            return
 
-        if self.halcomp is not None:
-            self.atc_tool = self.halcomp["fwd"]
-            if self.atc_tool != self.atc_previous_tool:
-                self.rotateSig.emit(self.atc_rotation)
-                self.atc_previous_tool = self.atc_tool
+        self.fwd_pin = self.halcomp["fwd"]
+        if self.fwd_pin == 1 and self.turn_next:
+            self.rotateFwdSig.emit(self.atc_position)
+            self.atc_position += 1
 
-            self.atc_tool = self.halcomp["rev"]
-            if self.atc_tool != self.atc_previous_tool:
-                self.rotateSig.emit(self.atc_rotation)
-                self.atc_previous_tool = self.atc_tool
+        self.rev_pin = self.halcomp["rev"]
+        if self.rev_pin == 1 and self.turn_next:
+            self.rotateRevSig.emit(self.atc_position)
+            self.atc_position += 1
+
+        self.atc_counter_pin = self.halcomp["count"]
+        if self.atc_counter_pin != self.prev_atc_counter_pin:
+            self.prev_atc_counter_pin = self.atc_counter_pin
