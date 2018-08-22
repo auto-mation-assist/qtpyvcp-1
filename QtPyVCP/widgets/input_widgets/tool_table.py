@@ -91,6 +91,9 @@ class ToolModel(QAbstractTableModel):
         if role != Qt.DisplayRole:
             return None
 
+        elif role == Qt.TextAlignmentRole:
+            return (Qt.AlignRight | Qt.AlignVCenter)
+
         item = index.internalPointer()
 
         return item.data(index.column())
@@ -249,15 +252,21 @@ class ToolTable(QTableView):
             # if i = ';' that is the comment and we have already added it
             # offset 1 and 2 are integers the rest floats
 
-            line_list = []
+            line_list = {}
 
             for offset, i in enumerate(['T', 'P', 'Z', 'D']):
                 for word in line.split():
                     if word.startswith(i):
                         item = word.lstrip(i)
-                        line_list.append(item)
+                        role = None
+                        if i in ('T', 'P'):
+                            role = Qt.TextAlignmentRole
+                        elif i in ('Z', 'D'):
+                            role = Qt.TextAlignmentRole
 
-            line_list.append(comment)
+                        line_list[item] = role
+
+            line_list[comment] = Qt.TextAlignmentRole
             lines.append(line_list)
 
         self.model.addTool(lines, self.model.rootItem)
