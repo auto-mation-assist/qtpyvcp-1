@@ -26,8 +26,7 @@ import sys
 
 import linuxcnc
 
-from PyQt5.QtCore import pyqtSlot, pyqtProperty, Qt, QItemSelectionModel, QAbstractListModel, QModelIndex, QVariant, \
-    QAbstractTableModel
+from PyQt5.QtCore import pyqtSlot, pyqtProperty, Qt, QModelIndex, QAbstractTableModel
 from PyQt5.QtWidgets import QTableView, QMessageBox, QAbstractItemView
 from PyQt5.QtGui import QStandardItem, QStandardItemModel
 
