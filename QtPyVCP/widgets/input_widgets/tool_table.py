@@ -26,7 +26,8 @@ import sys
 
 import linuxcnc
 
-from PyQt5.QtCore import pyqtSlot, pyqtProperty, Qt, QItemSelectionModel
+from PyQt5.QtCore import pyqtSlot, pyqtProperty, Qt, QItemSelectionModel, QAbstractListModel, QModelIndex, QVariant, \
+    QAbstractTableModel
 from PyQt5.QtWidgets import QTableView, QMessageBox, QAbstractItemView
 from PyQt5.QtGui import QStandardItem, QStandardItemModel
 
@@ -36,6 +37,134 @@ from QtPyVCP.utilities.info import Info
 
 LOG = logger.getLogger(__name__)
 INFO = Info()
+
+
+class ToolItem(object):
+    def __init__(self, data, parent=None):
+        self.parentItem = parent
+        self.itemData = data
+        self.childItems = []
+
+    def appendChild(self, item):
+        self.childItems.append(item)
+
+    def child(self, row):
+        return self.childItems[row]
+
+    def childCount(self):
+        return len(self.childItems)
+
+    def columnCount(self):
+        return len(self.itemData)
+
+    def data(self, column):
+        try:
+            return self.itemData[column]
+        except IndexError:
+            return None
+
+    def parent(self):
+        return self.parentItem
+
+    def row(self):
+        if self.parentItem:
+            return self.parentItem.childItems.index(self)
+
+        return 0
+
+
+
+class ToolModel(QAbstractTableModel):
+    def __init__(self, parent=None):
+        super(ToolModel, self).__init__(parent)
+
+        self.rootItem = ToolItem(("No", "Pocket", "Z", "Diam", "Comment"))
+
+    def columnCount(self, parent):
+        if parent.isValid():
+            return parent.internalPointer().columnCount()
+        else:
+            return self.rootItem.columnCount()
+
+    def data(self, index, role):
+        if not index.isValid():
+            return None
+
+        if role != Qt.DisplayRole:
+            return None
+
+        item = index.internalPointer()
+
+        return item.data(index.column())
+
+    def flags(self, index):
+        if not index.isValid():
+            return Qt.NoItemFlags
+
+        return Qt.ItemIsEnabled | Qt.ItemIsSelectable
+
+    def headerData(self, section, orientation, role):
+        if orientation == Qt.Horizontal and role == Qt.DisplayRole:
+            return self.rootItem.data(section)
+
+        return None
+
+    def index(self, row, column, parent):
+        if not self.hasIndex(row, column, parent):
+            return QModelIndex()
+
+        if not parent.isValid():
+            parentItem = self.rootItem
+        else:
+            parentItem = parent.internalPointer()
+
+        childItem = parentItem.child(row)
+        if childItem:
+            return self.createIndex(row, column, childItem)
+        else:
+            return QModelIndex()
+
+    def parent(self, index):
+        if not index.isValid():
+            return QModelIndex()
+
+        childItem = index.internalPointer()
+        parentItem = childItem.parent()
+
+        if parentItem == self.rootItem:
+            return QModelIndex()
+
+        return self.createIndex(parentItem.row(), 0, parentItem)
+
+    def rowCount(self, parent):
+        if parent.column() > 0:
+            return 0
+
+        if not parent.isValid():
+            parentItem = self.rootItem
+        else:
+            parentItem = parent.internalPointer()
+
+        return parentItem.childCount()
+
+    def addTool(self, lines, parent):
+        parents = [parent]
+        indentations = [0]
+
+        number = 0
+
+        while number < len(lines):
+
+            lineData = lines[number]
+
+            if lineData:
+                # Read the column data from the rest of the line.
+                columnData = lineData
+
+                # Append a new item to the current parent's list of children.
+                parents[-1].appendChild(ToolItem(columnData, parents[-1]))
+
+                number += 1
 
 
 class ToolTable(QTableView):
@@ -49,8 +178,8 @@ class ToolTable(QTableView):
         self.table_header = ["Tool", "Pocket", "Z", "Diameter", "Comment"]
         self.col_count = len(self.table_header)
 
-        self.model = QStandardItemModel(0, 0, self)
-        self.model.setHorizontalHeaderLabels(self.table_header)
+        self.model = ToolModel(self)
+        # self.model.setHeaderData(self.table_header)
 
         self.setModel(self.model)
         self.horizontalHeader().setStretchLastSection(True)
@@ -104,6 +233,8 @@ class ToolTable(QTableView):
             # if i = ';' that is the comment and we have already added it
             # offset 1 and 2 are integers the rest floats
 
+            line_list = []
+
             for offset, i in enumerate(['T', 'P', 'Z', 'D', ';']):
                 for word in line.split():
                     if word.startswith(i):
@@ -112,11 +243,12 @@ class ToolTable(QTableView):
                             item.setTextAlignment(Qt.AlignCenter)
                         elif i in ('Z', 'D'):
                             item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
-
-                        self.model.setItem(count, offset, item)
+                        line_list.append(item)
 
             item = self.handleItem(comment)
-            self.model.setItem(count, 4, item)
+            line_list.append(item)
+
+            self.model.addTool(line_list, self.model.rootItem)
 
     @pyqtSlot()
     def saveToolTable(self):
@@ -184,8 +316,8 @@ class ToolTable(QTableView):
             if not self.ask_dialog("Do yo wan't to delete the whole tool table?"):
                 return
 
-        for i in reversed(range(self.model.rowCount() + 1)):
-            self.model.removeRow(i)
+        # for i in reversed(range(self.model.rowCount(self.model.rootItem) + 1)):
+        #     self.model.removeRow(i)
 
     def ask_dialog(self, message):
         box = QMessageBox.question(self.parent,
