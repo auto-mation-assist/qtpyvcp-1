@@ -254,17 +254,11 @@ class ToolTable(QTableView):
             for offset, i in enumerate(['T', 'P', 'Z', 'D']):
                 for word in line.split():
                     if word.startswith(i):
-                        item = self.handleItem(word.lstrip(i))
-                        if i in ('T', 'P'):
-                            item.setTextAlignment(Qt.AlignCenter)
-                        elif i in ('Z', 'D'):
-                            item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
+                        item = word.lstrip(i)
                         line_list.append(item)
 
-            item = self.handleItem(comment)
-            line_list.append(item)
+            line_list.append(comment)
             lines.append(line_list)
-            break
 
         self.model.addTool(lines, self.model.rootItem)
 
