@@ -73,7 +73,6 @@ class ToolItem(object):
         return 0
 
 
-
 class ToolModel(QAbstractTableModel):
     def __init__(self, parent=None):
         super(ToolModel, self).__init__(parent)
@@ -154,17 +153,35 @@ class ToolModel(QAbstractTableModel):
         number = 0
 
         while number < len(lines):
+            position = 0
+            while position < len(lines[number]):
+                if lines[number][position] != ' ':
+                    break
+                position += 1
 
-            lineData = lines[number]
+            lineData = lines[number][position:]
 
             if lineData:
                 # Read the column data from the rest of the line.
-                columnData = lineData
+                columnData = [s for s in lineData if s]
+
+                if position > indentations[-1]:
+                    # The last child of the current parent is now the new
+                    # parent unless the current parent has no children.
+
+                    if parents[-1].childCount() > 0:
+                        parents.append(parents[-1].child(parents[-1].childCount() - 1))
+                        indentations.append(position)
+
+                else:
+                    while position < indentations[-1] and len(parents) > 0:
+                        parents.pop()
+                        indentations.pop()
 
                 # Append a new item to the current parent's list of children.
                 parents[-1].appendChild(ToolItem(columnData, parents[-1]))
 
-                number += 1
+            number += 1
 
 
 class ToolTable(QTableView):
@@ -215,7 +232,7 @@ class ToolTable(QTableView):
 
         with open(fn, "r") as tf:
             tool_table = tf.readlines()
-
+        lines = []
         for count, line in enumerate(tool_table):
 
             # Separate tool data from comments
@@ -235,7 +252,7 @@ class ToolTable(QTableView):
 
             line_list = []
 
-            for offset, i in enumerate(['T', 'P', 'Z', 'D', ';']):
+            for offset, i in enumerate(['T', 'P', 'Z', 'D']):
                 for word in line.split():
                     if word.startswith(i):
                         item = self.handleItem(word.lstrip(i))
@@ -247,8 +264,10 @@ class ToolTable(QTableView):
 
             item = self.handleItem(comment)
             line_list.append(item)
+            lines.append(line_list)
+            break
 
-            self.model.addTool(line_list, self.model.rootItem)
+        self.model.addTool(lines, self.model.rootItem)
 
     @pyqtSlot()
     def saveToolTable(self):
