@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>532</width>
-    <height>341</height>
+    <width>836</width>
+    <height>451</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,15 +20,19 @@
      <height>624</height>
     </size>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout"/>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="ToolTable" name="tooltable"/>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>532</width>
-     <height>20</height>
+     <width>836</width>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -81,6 +85,11 @@
    <extends>QMainWindow</extends>
    <header>QtPyVCP.widgets.form_widgets.main_window</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ToolTable</class>
+   <extends>QTableView</extends>
+   <header>QtPyVCP.widgets.input_widgets.tool_table</header>
   </customwidget>
  </customwidgets>
  <resources/>
