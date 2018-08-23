@@ -215,9 +215,8 @@ class ToolTable(QTableView):
 
     @pyqtSlot()
     def loadToolTable(self):
-        if self.tool_table_loaded:
-            if not self.ask_dialog("Do you wan't to re-load the tool table?\n all unsaved changes will be lost."):
-                return
+        if self.tool_table_loaded and not self.ask_dialog("Do you wan't to re-load the tool table?\n all unsaved changes will be lost."):
+            return
 
         self.removeAllTools(confirm=False)
 
