@@ -28,7 +28,7 @@ import linuxcnc
 
 from PyQt5.QtCore import pyqtSlot, pyqtProperty, Qt, QModelIndex, QAbstractTableModel
 from PyQt5.QtWidgets import QTableView, QMessageBox, QAbstractItemView
-from PyQt5.QtGui import QStandardItem, QStandardItemModel
+from PyQt5.QtGui import QStandardItem, QStandardItemModel, QFont
 
 # Set up logging
 from QtPyVCP.utilities import logger
@@ -75,14 +75,27 @@ class ToolItem(object):
 class ToolModel(QAbstractTableModel):
     def __init__(self, parent=None):
         super(ToolModel, self).__init__(parent)
+        self.table_header = ["Tool", "Pocket", "Z", "Diameter", "Comment"]
 
-        self.rootItem = ToolItem(("No", "Pocket", "Z", "Diam", "Comment"))
+        self.rootItem = ToolItem(self.table_header)
+        self._tool_list = list()
 
     def columnCount(self, parent):
         if parent.isValid():
             return parent.internalPointer().columnCount()
         else:
             return self.rootItem.columnCount()
+
+    def rowCount(self, parent):
+        if parent.column() > 0:
+            return 0
+
+        if not parent.isValid():
+            parentItem = self.rootItem
+        else:
+            parentItem = parent.internalPointer()
+
+        return parentItem.childCount()
 
     def data(self, index, role):
         if not index.isValid():
@@ -92,7 +105,7 @@ class ToolModel(QAbstractTableModel):
             return None
 
         elif role == Qt.TextAlignmentRole:
-            return (Qt.AlignRight | Qt.AlignVCenter)
+            return Qt.AlignRight | Qt.AlignVCenter
 
         item = index.internalPointer()
 
@@ -101,11 +114,11 @@ class ToolModel(QAbstractTableModel):
     def flags(self, index):
         return Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsEditable
 
-    def headerData(self, section, orientation, role):
-        if orientation == Qt.Horizontal and role == Qt.DisplayRole:
-            return self.rootItem.data(section)
+    def headerData(self, section, orientation, role=Qt.DisplayRole):
+        if role == Qt.DisplayRole and orientation == Qt.Horizontal:
+            return self.table_header[section]
 
-        return None
+        return QAbstractTableModel.headerData(self, section, orientation, role)
 
     def index(self, row, column, parent):
         if not self.hasIndex(row, column, parent):
@@ -145,6 +158,42 @@ class ToolModel(QAbstractTableModel):
 
         return parentItem.childCount()
 
+    def data(self, index, role=Qt.DisplayRole):
+        return self._data(self._tool_list[index.row()], index.column(), role)
+
+    def _data(self, item, column, role=Qt.DisplayRole):
+        if role == Qt.DisplayRole:
+            if column == 0:
+                return item[0]
+            elif column == 1:
+                return item[1]
+            elif column == 2:
+                return item[2]
+            elif column == 3:
+                return item[3]
+            elif column == 4:
+                return item[4]
+
+        elif role == Qt.TextAlignmentRole:
+            if column == 0:
+                return Qt.AlignVCenter | Qt.AlignCenter
+            elif column == 1:
+                return Qt.AlignVCenter | Qt.AlignCenter
+            elif column == 2:
+                return Qt.AlignVCenter | Qt.AlignRight
+            elif column == 3:
+                return Qt.AlignVCenter | Qt.AlignRight
+            elif column == 4:
+                return Qt.AlignVCenter | Qt.AlignCenter
+        """
+        elif role == Qt.FontRole:
+
+            font = QFont()
+            font.setBold(True)
+            return font
+        """
+        return None
+
     def addTools(self, file):
 
         parents = [self.rootItem]
@@ -153,6 +202,9 @@ class ToolModel(QAbstractTableModel):
         for count, line in enumerate(file):
 
             # Separate tool data from comments
+
+            tool = []
+
             comment = ''
             index = line.find(";")  # Find comment start index
 
@@ -162,31 +214,18 @@ class ToolModel(QAbstractTableModel):
                 comment = (line[index + 1:]).rstrip("\n")
                 line = line[0:index].rstrip()
 
-            item_list = []
-
             for offset, i in enumerate(['T', 'P', 'Z', 'D']):
                 for word in line.split():
                     if word.startswith(i):
                         item = word.lstrip(i)
-                        item_list.append(item)
+                        tool.append(item)
 
-            item_list.append(comment)
-
-            if count > indentations[-1]:
-                # The last child of the current parent is now the new
-                # parent unless the current parent has no children.
-
-                if parents[-1].childCount() > 0:
-                    parents.append(parents[-1].child(parents[-1].childCount() - 1))
-                    indentations.append(count)
-
-            else:
-                while count < indentations[-1] and len(parents) > 0:
-                    parents.pop()
-                    indentations.pop()
+            tool.append(comment)
 
             # Append a new item to the current parent's list of children.
-            parents[-1].appendChild(ToolItem(item_list, parents[-1]))
+            parents[-1].appendChild(ToolItem(tool, parents[-1]))
+
+            self._tool_list.append(tool)
 
 class ToolTable(QTableView):
 
@@ -196,11 +235,7 @@ class ToolTable(QTableView):
 
         self.cmd = linuxcnc.command()
 
-        self.table_header = ["Tool", "Pocket", "Z", "Diameter", "Comment"]
-        self.col_count = len(self.table_header)
-
         self.model = ToolModel(self)
-        # self.model.setHeaderData(self.table_header)
 
         self.setModel(self.model)
         self.horizontalHeader().setStretchLastSection(True)
@@ -215,10 +250,10 @@ class ToolTable(QTableView):
         self.loadToolTable()
         self.tool_table_loaded = True
 
-
     @pyqtSlot()
     def loadToolTable(self):
-        if self.tool_table_loaded and not self.ask_dialog("Do you wan't to re-load the tool table?\n all unsaved changes will be lost."):
+        if self.tool_table_loaded and not self.ask_dialog(
+                "Do you wan't to re-load the tool table?\n all unsaved changes will be lost."):
             return
 
         self.removeAllTools(confirm=False)
@@ -236,7 +271,6 @@ class ToolTable(QTableView):
 
         with open(fn, "r") as f:
             self.model.addTools(f)
-
 
     @pyqtSlot()
     def saveToolTable(self):
