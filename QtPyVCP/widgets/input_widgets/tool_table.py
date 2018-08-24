@@ -27,8 +27,9 @@ import sys
 import linuxcnc
 
 from PyQt5.QtCore import pyqtSlot, pyqtProperty, Qt, QModelIndex, QAbstractTableModel
-from PyQt5.QtWidgets import QTableView, QMessageBox, QAbstractItemView
-from PyQt5.QtGui import QStandardItem, QStandardItemModel, QFont
+from PyQt5.QtWidgets import QTableView, QMessageBox, QAbstractItemView, QSpinBox, QItemDelegate, QDoubleSpinBox, \
+    QLineEdit
+from PyQt5.QtGui import QStandardItem, QStandardItemModel, QFont, QColor
 
 # Set up logging
 from QtPyVCP.utilities import logger
@@ -36,6 +37,45 @@ from QtPyVCP.utilities.info import Info
 
 LOG = logger.getLogger(__name__)
 INFO = Info()
+
+
+class ItemDelegate(QItemDelegate):
+    def createEditor(self, parent, option, index):
+        if index.column() in (0, 1):
+            editor = QSpinBox(parent)
+            editor.setMinimum(0)
+            editor.setMaximum(100)
+            return editor
+
+        elif index.column() in (2, 3):
+            editor = QDoubleSpinBox(parent)
+            editor.setMinimum(0)
+            return editor
+
+        elif index.column() == 4:
+            editor = QLineEdit(parent)
+            return editor
+
+        return None
+
+    def setEditorData(self, item, index):
+        value = index.model().data(index, Qt.EditRole)
+        if index.column() in (0, 1, 2, 3):
+            item.setValue(value)
+        else:
+            item.setText(value)
+
+    def setModelData(self, item, model, index):
+        if index.column() in (0, 1, 2, 3):
+            item.interpretText()
+            value = item.value()
+        else:
+            value = item.text()
+
+        model.setData(index, value, Qt.EditRole)
+
+    def updateEditorGeometry(self, editor, option, index):
+        editor.setGeometry(option.rect)
 
 
 class ToolItem(object):
@@ -97,20 +137,6 @@ class ToolModel(QAbstractTableModel):
 
         return parentItem.childCount()
 
-    def data(self, index, role):
-        if not index.isValid():
-            return None
-
-        if role != Qt.DisplayRole:
-            return None
-
-        elif role == Qt.TextAlignmentRole:
-            return Qt.AlignRight | Qt.AlignVCenter
-
-        item = index.internalPointer()
-
-        return item.data(index.column())
-
     def flags(self, index):
         return Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsEditable
 
@@ -162,7 +188,20 @@ class ToolModel(QAbstractTableModel):
         return self._data(self._tool_list[index.row()], index.column(), role)
 
     def _data(self, item, column, role=Qt.DisplayRole):
-        if role == Qt.DisplayRole:
+        if role == Qt.EditRole:
+            if column == 0:
+                return int(item[0])
+            elif column == 1:
+                return int(item[1])
+            elif column == 2:
+                return float(item[2])
+            elif column == 3:
+                return float(item[3])
+            elif column == 4:
+                return str(item[4])
+
+
+        elif role == Qt.DisplayRole:
             if column == 0:
                 return item[0]
             elif column == 1:
@@ -184,7 +223,7 @@ class ToolModel(QAbstractTableModel):
             elif column == 3:
                 return Qt.AlignVCenter | Qt.AlignRight
             elif column == 4:
-                return Qt.AlignVCenter | Qt.AlignCenter
+                return Qt.AlignVCenter | Qt.AlignJustify
         """
         elif role == Qt.FontRole:
 
@@ -193,6 +232,10 @@ class ToolModel(QAbstractTableModel):
             return font
         """
         return None
+
+    def setData(self, index, value, role):
+        self._tool_list[index.row()][index.column()] = value
+        return True
 
     def addTools(self, file):
 
@@ -227,6 +270,7 @@ class ToolModel(QAbstractTableModel):
 
             self._tool_list.append(tool)
 
+
 class ToolTable(QTableView):
 
     def __init__(self, parent=None):
@@ -236,6 +280,10 @@ class ToolTable(QTableView):
         self.cmd = linuxcnc.command()
 
         self.model = ToolModel(self)
+
+        delegate = ItemDelegate()
+
+        self.setItemDelegate(delegate)
 
         self.setModel(self.model)
         self.horizontalHeader().setStretchLastSection(True)
@@ -356,19 +404,6 @@ class ToolTable(QTableView):
         new_data = [row_num, row_num, 0.0, 0.0, 'New Tool']
         row_items = [self.handleItem(item) for item in new_data]
         return row_items
-
-    def handleItem(self, value):
-        item = QStandardItem()
-
-        if isinstance(value, str):
-            item.setText(value)
-        elif isinstance(value, int):
-            item.setText(str(value))
-        elif isinstance(value, float):
-            item.setText('{:0.4f}'.format(value))
-        elif value is None:
-            item.setText("")
-        return item
 
     def selectedRow(self):
         return self.selectionModel().currentIndex().row()
