@@ -145,43 +145,48 @@ class ToolModel(QAbstractTableModel):
 
         return parentItem.childCount()
 
-    def addTool(self, lines, parent):
-        parents = [parent]
+    def addTools(self, file):
+
+        parents = [self.rootItem]
         indentations = [0]
 
-        number = 0
+        for count, line in enumerate(file):
 
-        while number < len(lines):
-            position = 0
-            while position < len(lines[number]):
-                if lines[number][position] != ' ':
-                    break
-                position += 1
+            # Separate tool data from comments
+            comment = ''
+            index = line.find(";")  # Find comment start index
 
-            lineData = lines[number][position:]
+            if index == -1:  # Delimiter ';' is missing, so no comments
+                line = line.rstrip("\n")
+            else:
+                comment = (line[index + 1:]).rstrip("\n")
+                line = line[0:index].rstrip()
 
-            if lineData:
-                # Read the column data from the rest of the line.
-                columnData = [s for s in lineData if s]
+            item_list = []
 
-                if position > indentations[-1]:
-                    # The last child of the current parent is now the new
-                    # parent unless the current parent has no children.
+            for offset, i in enumerate(['T', 'P', 'Z', 'D']):
+                for word in line.split():
+                    if word.startswith(i):
+                        item = word.lstrip(i)
+                        item_list.append(item)
 
-                    if parents[-1].childCount() > 0:
-                        parents.append(parents[-1].child(parents[-1].childCount() - 1))
-                        indentations.append(position)
+            item_list.append(comment)
 
-                else:
-                    while position < indentations[-1] and len(parents) > 0:
-                        parents.pop()
-                        indentations.pop()
+            if count > indentations[-1]:
+                # The last child of the current parent is now the new
+                # parent unless the current parent has no children.
 
-                # Append a new item to the current parent's list of children.
-                parents[-1].appendChild(ToolItem(columnData, parents[-1]))
+                if parents[-1].childCount() > 0:
+                    parents.append(parents[-1].child(parents[-1].childCount() - 1))
+                    indentations.append(count)
 
-            number += 1
+            else:
+                while count < indentations[-1] and len(parents) > 0:
+                    parents.pop()
+                    indentations.pop()
 
+            # Append a new item to the current parent's list of children.
+            parents[-1].appendChild(ToolItem(item_list, parents[-1]))
 
 class ToolTable(QTableView):
 
@@ -229,45 +234,9 @@ class ToolTable(QTableView):
 
         LOG.debug("Loading tool table: {0}".format(fn))
 
-        with open(fn, "r") as tf:
-            tool_table = tf.readlines()
-        lines = []
-        for count, line in enumerate(tool_table):
+        with open(fn, "r") as f:
+            self.model.addTools(f)
 
-            # Separate tool data from comments
-            comment = ''
-            index = line.find(";")  # Find comment start index
-
-            if index == -1:  # Delimiter ';' is missing, so no comments
-                line = line.rstrip("\n")
-            else:
-                comment = (line[index + 1:]).rstrip("\n")
-                line = line[0:index].rstrip()
-
-            # search beginning of each word for keyword letters
-            # offset 0 is the checkbox so ignore it
-            # if i = ';' that is the comment and we have already added it
-            # offset 1 and 2 are integers the rest floats
-
-            line_list = []
-
-            for offset, i in enumerate(['T', 'P', 'Z', 'D']):
-                for word in line.split():
-                    if word.startswith(i):
-                        item = word.lstrip(i)
-                        """
-                        role = None
-                        if i in ('T', 'P'):
-                            role = Qt.TextAlignmentRole
-                        elif i in ('Z', 'D'):
-                            role = Qt.TextAlignmentRole
-                        """
-                        line_list.append(item)
-
-            line_list.append(comment)
-            lines.append(line_list)
-
-        self.model.addTool(lines, self.model.rootItem)
 
     @pyqtSlot()
     def saveToolTable(self):
