@@ -42,7 +42,7 @@ class ItemDelegate(QStyledItemDelegate):
     
     def __init__(self):
         super(ItemDelegate, self).__init__()
-        self._padding = ' ' * max(1, 2)
+        self._padding = ' ' * 2
 
     def displayText(self, text, locale):
         return self._padding + text
@@ -52,19 +52,11 @@ class ItemDelegate(QStyledItemDelegate):
             editor = QSpinBox(parent)
             editor.setMinimum(0)
             editor.setMaximum(100)
-            margins = editor.textMargins()
-            padding = editor.fontMetrics().width(self._padding) + 1
-            margins.setLeft(margins.left() + padding)
-            editor.setTextMargins(margins)
             return editor
 
         elif index.column() in (2, 3):
             editor = QDoubleSpinBox(parent)
             editor.setMinimum(0)
-            margins = editor.textMargins()
-            padding = editor.fontMetrics().width(self._padding) + 1
-            margins.setLeft(margins.left() + padding)
-            editor.setTextMargins(margins)
             return editor
 
         elif index.column() == 4:
