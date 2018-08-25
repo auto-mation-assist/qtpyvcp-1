@@ -393,6 +393,9 @@ class ToolTable(QTableView):
     @pyqtSlot()
     def deleteSelectedTool(self):
         current_row = self.selectedRow()
+        if current_row == -1:
+            # no row selcted
+            return
         current_tool = self.model.tool_list[current_row][0]
 
         if not self.ask_dialog("Do yo wan't to delete T{} ?".format(current_tool)):
