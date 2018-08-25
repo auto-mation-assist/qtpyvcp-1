@@ -106,6 +106,9 @@ class ToolItem(object):
     def appendChild(self, item):
         self.childItems.append(item)
 
+    def removeChild(self, index):
+        self.childItems.pop(index)
+
     def child(self, row):
         return self.childItems[row]
 
@@ -136,13 +139,13 @@ class ToolModel(QAbstractTableModel):
         self.table_header = ["Tool", "Pocket", "Z", "Diameter", "Comment"]
 
         self.rootItem = ToolItem(self.table_header)
-        self._tool_list = list()
+        self.tool_list = list()
 
     def columnCount(self, parent=None):
         return len(self.table_header)
 
     def rowCount(self, parent=None):
-        return len(self._tool_list)
+        return len(self.tool_list)
 
     def flags(self, index):
         return Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsEditable
@@ -181,7 +184,7 @@ class ToolModel(QAbstractTableModel):
         return self.createIndex(parentItem.row(), 0, parentItem)
 
     def data(self, index, role=Qt.DisplayRole):
-        return self._data(self._tool_list[index.row()], index.column(), role)
+        return self._data(self.tool_list[index.row()], index.column(), role)
 
     def _data(self, item, column, role=Qt.DisplayRole):
         if role == Qt.EditRole:
@@ -229,10 +232,10 @@ class ToolModel(QAbstractTableModel):
         return None
 
     def setData(self, index, value, role):
-        self._tool_list[index.row()][index.column()] = value
+        self.tool_list[index.row()][index.column()] = value
         return True
 
-    def addTools(self, file):
+    def loadToolTable(self, file):
 
         parents = [self.rootItem]
         indentations = [0]
@@ -266,15 +269,15 @@ class ToolModel(QAbstractTableModel):
             # Append a new item to the current parent's list of children.
             parents[-1].appendChild(ToolItem(tool, parents[-1]))
 
-            self._tool_list.append(tool)
+            self.tool_list.append(tool)
 
-    def saveTools(self, file):
+    def saveToolTable(self, file):
         for row_index in range(self.rowCount()):
             line = ""
             for col_index in range(self.columnCount()):
-                item = self._tool_list[row_index][col_index]
+                item = self.tool_list[row_index][col_index]
                 if item is not None and item != "":
-                    if col_index in (range(0, 4)):  # tool# pocket#
+                    if col_index in (range(0, 4)):
                         line += "{}{} ".format(['T', 'P', 'Z', 'D', ';'][col_index], item)
                     else:
                         line += "{}{}".format(['T', 'P', 'Z', 'D', ';'][col_index], item.strip())
@@ -284,6 +287,12 @@ class ToolModel(QAbstractTableModel):
 
         file.flush()
         os.fsync(file.fileno())
+
+    def addTool(self, tool):
+        pass
+
+    def removeRow(self, row):
+        self.tool_list.pop(row)
 
 
 class ToolTable(QTableView):
@@ -319,7 +328,8 @@ class ToolTable(QTableView):
                 "Do you wan't to re-load the tool table?\n all unsaved changes will be lost."):
             return
 
-        self.removeAllTools(confirm=False)
+        if len(self.model.tool_list):
+            self.removeAllTools(confirm=False)
 
         fn = self.tool_table_file
 
@@ -333,7 +343,7 @@ class ToolTable(QTableView):
         LOG.debug("Loading tool table: {0}".format(fn))
 
         with open(fn, "r") as f:
-            self.model.addTools(f)
+            self.model.loadToolTable(f)
 
     @pyqtSlot()
     def saveToolTable(self):
@@ -348,15 +358,9 @@ class ToolTable(QTableView):
         LOG.debug("Saving tool table as: {0}".format(fn))
 
         with open(fn, "w") as f:
-            self.model.saveTools(f)
+            self.model.saveToolTable(f)
 
         self.cmd.load_tool_table()
-
-    @pyqtSlot()
-    def appendTool(self):
-        # row_num = self.model.rowCount() + 1
-        self.model.appendRow(self.newRow(row_num))
-        self.selectRow(row_num - 1)
 
     @pyqtSlot()
     def insertToolAbove(self):
@@ -373,12 +377,14 @@ class ToolTable(QTableView):
     @pyqtSlot()
     def deleteSelectedTool(self):
         current_row = self.selectedRow()
-        current_tool = self.model.item(current_row, 0)
+        current_tool = self.model.tool_list[current_row][0]
 
-        if not self.ask_dialog("Do yo wan't to delete T{} ?".format(current_tool.text())):
+        if not self.ask_dialog("Do yo wan't to delete T{} ?".format(current_tool)):
             return
 
-        self.model.removeRow(current_row)
+        indexes = self.selectionModel().selectedRows()
+        for index in sorted(indexes):
+            self.model.removeRow(index.row())
 
     @pyqtSlot()
     def removeAllTools(self, confirm=True):
@@ -386,8 +392,8 @@ class ToolTable(QTableView):
             if not self.ask_dialog("Do yo wan't to delete the whole tool table?"):
                 return
 
-        # for i in reversed(range(self.model.rowCount(self.model.rootItem) + 1)):
-        #     self.model.removeRow(i)
+        for i in reversed(range(self.model.rowCount() + 1)):
+            self.model.removeRow(i)
 
     def ask_dialog(self, message):
         box = QMessageBox.question(self.parent,
@@ -402,7 +408,7 @@ class ToolTable(QTableView):
 
     def newRow(self, row_num=0):
         new_data = [row_num, row_num, 0.0, 0.0, 'New Tool']
-        row_items = [self.handleItem(item) for item in new_data]
+        row_items = [item for item in new_data]
         return row_items
 
     def selectedRow(self):

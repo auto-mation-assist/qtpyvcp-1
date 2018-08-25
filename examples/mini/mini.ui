@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>836</width>
-    <height>451</height>
+    <width>860</width>
+    <height>476</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,17 +20,8 @@
      <height>624</height>
     </size>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
-     <widget class="ToolTable" name="tooltable">
-      <property name="styleSheet">
-       <string notr="true">QTableView {
-	color: black;
-}</string>
-      </property>
-     </widget>
-    </item>
-    <item>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QPushButton" name="saveButton">
@@ -46,10 +37,30 @@
         </property>
        </widget>
       </item>
+     </layout>
+    </item>
+    <item row="0" column="0">
+     <widget class="ToolTable" name="tooltable">
+      <property name="styleSheet">
+       <string notr="true">QTableView {
+	color: black;
+}</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="3">
+     <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QPushButton" name="addButton">
+       <widget class="QPushButton" name="aboveButton">
         <property name="text">
-         <string>Add</string>
+         <string>Add above</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="belowButton">
+        <property name="text">
+         <string>Add below</string>
         </property>
        </widget>
       </item>
@@ -69,7 +80,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>836</width>
+     <width>860</width>
      <height>25</height>
     </rect>
    </property>
@@ -165,7 +176,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>addButton</sender>
+   <sender>belowButton</sender>
    <signal>clicked()</signal>
    <receiver>tooltable</receiver>
    <slot>insertToolBelow()</slot>
@@ -184,7 +195,7 @@
    <sender>deleteButton</sender>
    <signal>clicked()</signal>
    <receiver>tooltable</receiver>
-   <slot>saveToolTable()</slot>
+   <slot>deleteSelectedTool()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>643</x>
@@ -193,6 +204,22 @@
     <hint type="destinationlabel">
      <x>662</x>
      <y>360</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>aboveButton</sender>
+   <signal>clicked()</signal>
+   <receiver>tooltable</receiver>
+   <slot>insertToolAbove()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>809</x>
+     <y>122</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>384</x>
+     <y>232</y>
     </hint>
    </hints>
   </connection>
