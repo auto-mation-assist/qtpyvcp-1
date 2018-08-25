@@ -107,7 +107,11 @@ class ToolItem(object):
         self.childItems.append(item)
 
     def child(self, row):
-        return self.childItems[row]
+        if row < 0:
+            row = 0
+        elif row > self.childCount():
+            row = self.childCount()
+        return self.childItems[row-1]
 
     def childCount(self):
         return len(self.childItems)
@@ -134,7 +138,7 @@ class ToolModel(QStandardItemModel):
     def __init__(self, parent=None):
         super(ToolModel, self).__init__(parent)
         self.table_header = ["Tool", "Pocket", "Z", "Diameter", "Comment"]
-        self.new_tool = [0, 0, 0, 0, "New Tool"]
+        self.new_tool = [0, 0, 0.0, 0.0, "New Tool"]
 
         self.rootItem = ToolItem(self.table_header)
         self.tool_list = list()
@@ -238,13 +242,15 @@ class ToolModel(QStandardItemModel):
         parents = [self.rootItem]
         indentations = [0]
 
+        self.tool_list = list()
+
         for count, line in enumerate(file):
 
             # Separate tool data from comments
 
-            tool = []
+            tool = list()
 
-            comment = ''
+            comment = str()
             index = line.find(";")  # Find comment start index
 
             if index == -1:  # Delimiter ';' is missing, so no comments
@@ -286,15 +292,19 @@ class ToolModel(QStandardItemModel):
         file.flush()
         os.fsync(file.fileno())
 
-    def insertRows(self, row, dir, index=QModelIndex()):
-        self.beginInsertRows(index, row + dir, row + dir -1)
-        self.tool_list.insert(row + dir, self.new_tool)
+    def newTool(self, row, dir):
+        position = row + dir
+        if position < 0:
+            position = 0
+
+        self.beginInsertRows(QModelIndex(), position, position)
+
+        self.tool_list.insert(position, self.new_tool)
+
         self.endInsertRows()
 
-        return True
-
-    def removeRow(self, row, index=QModelIndex()):
-        self.beginRemoveRows(index, row, row)
+    def removeTool(self, row):
+        self.beginRemoveRows(QModelIndex(), row, row)
         self.tool_list.pop(row)
         self.endRemoveRows()
 
@@ -368,11 +378,15 @@ class ToolTable(QTableView):
 
     @pyqtSlot()
     def insertToolAbove(self):
-        self.model.insertRows(self.selectedRow(), 0)
+        selected = self.selectedRow()
+        self.model.newTool(selected, -1)
+        self.selectRow(selected)
 
     @pyqtSlot()
     def insertToolBelow(self):
-        self.model.insertRows(self.selectedRow(), 1)
+        selected = self.selectedRow()
+        self.model.newTool(selected, +1)
+        self.selectRow(selected)
 
     @pyqtSlot()
     def deleteSelectedTool(self):
@@ -382,7 +396,7 @@ class ToolTable(QTableView):
         if not self.ask_dialog("Do yo wan't to delete T{} ?".format(current_tool)):
             return
 
-        self.model.removeRow(current_row)
+        self.model.removeTool(current_row)
 
     @pyqtSlot()
     def removeAllTools(self, confirm=True):
@@ -403,11 +417,6 @@ class ToolTable(QTableView):
             return True
         else:
             return False
-
-    def newRow(self, row_num=0):
-        new_data = [row_num, row_num, 0.0, 0.0, 'New Tool']
-        row_items = [item for item in new_data]
-        return row_items
 
     def selectedRow(self):
         return self.selectionModel().currentIndex().row()
