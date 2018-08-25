@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>860</width>
-    <height>476</height>
+    <width>732</width>
+    <height>479</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -55,6 +55,12 @@
         <property name="text">
          <string>Add above</string>
         </property>
+        <property name="iconSize">
+         <size>
+          <width>32</width>
+          <height>62</height>
+         </size>
+        </property>
        </widget>
       </item>
       <item>
@@ -73,6 +79,13 @@
       </item>
      </layout>
     </item>
+    <item row="1" column="3">
+     <widget class="QPushButton" name="emptyButton">
+      <property name="text">
+       <string>Empty</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -80,7 +93,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>860</width>
+     <width>732</width>
      <height>25</height>
     </rect>
    </property>
@@ -150,8 +163,8 @@
    <slot>saveToolTable()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>109</x>
-     <y>426</y>
+     <x>119</x>
+     <y>468</y>
     </hint>
     <hint type="destinationlabel">
      <x>417</x>
@@ -166,8 +179,8 @@
    <slot>loadToolTable()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>315</x>
-     <y>426</y>
+     <x>633</x>
+     <y>468</y>
     </hint>
     <hint type="destinationlabel">
      <x>417</x>
@@ -182,8 +195,8 @@
    <slot>insertToolBelow()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>520</x>
-     <y>426</y>
+     <x>721</x>
+     <y>246</y>
     </hint>
     <hint type="destinationlabel">
      <x>417</x>
@@ -198,12 +211,12 @@
    <slot>deleteSelectedTool()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>643</x>
-     <y>428</y>
+     <x>721</x>
+     <y>355</y>
     </hint>
     <hint type="destinationlabel">
-     <x>662</x>
-     <y>360</y>
+     <x>634</x>
+     <y>394</y>
     </hint>
    </hints>
   </connection>
@@ -214,12 +227,28 @@
    <slot>insertToolAbove()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>809</x>
-     <y>122</y>
+     <x>721</x>
+     <y>137</y>
     </hint>
     <hint type="destinationlabel">
      <x>384</x>
      <y>232</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>emptyButton</sender>
+   <signal>clicked()</signal>
+   <receiver>tooltable</receiver>
+   <slot>removeAllTools()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>679</x>
+     <y>452</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>431</x>
+     <y>278</y>
     </hint>
    </hints>
   </connection>

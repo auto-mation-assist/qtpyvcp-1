@@ -40,7 +40,7 @@ INFO = Info()
 
 
 class ItemDelegate(QStyledItemDelegate):
-    
+
     def __init__(self):
         super(ItemDelegate, self).__init__()
         self._padding = ' ' * 2
@@ -64,6 +64,7 @@ class ItemDelegate(QStyledItemDelegate):
 
         elif index.column() in (2, 3):
             editor = QDoubleSpinBox(parent)
+            editor.setDecimals(4)
             editor.setMinimum(0)
             return editor
 
@@ -111,7 +112,7 @@ class ToolItem(object):
             row = 0
         elif row > self.childCount():
             row = self.childCount()
-        return self.childItems[row-1]
+        return self.childItems[row - 1]
 
     def childCount(self):
         return len(self.childItems)
@@ -310,6 +311,7 @@ class ToolModel(QStandardItemModel):
 
         return True
 
+
 class ToolTable(QTableView):
 
     def __init__(self, parent=None):
@@ -405,7 +407,7 @@ class ToolTable(QTableView):
                 return
 
         for i in reversed(range(self.model.rowCount())):
-            self.model.removeRow(i)
+            self.model.removeTool(i)
 
     def ask_dialog(self, message):
         box = QMessageBox.question(self.parent,
