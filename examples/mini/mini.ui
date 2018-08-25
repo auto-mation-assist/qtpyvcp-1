@@ -157,34 +157,18 @@
  <resources/>
  <connections>
   <connection>
-   <sender>saveButton</sender>
-   <signal>clicked()</signal>
-   <receiver>tooltable</receiver>
-   <slot>saveToolTable()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>119</x>
-     <y>468</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>417</x>
-     <y>219</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>loadButton</sender>
    <signal>clicked()</signal>
    <receiver>tooltable</receiver>
    <slot>loadToolTable()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>633</x>
-     <y>468</y>
+     <x>401</x>
+     <y>461</y>
     </hint>
     <hint type="destinationlabel">
-     <x>417</x>
-     <y>219</y>
+     <x>401</x>
+     <y>226</y>
     </hint>
    </hints>
   </connection>
@@ -195,12 +179,12 @@
    <slot>insertToolBelow()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>721</x>
-     <y>246</y>
+     <x>701</x>
+     <y>219</y>
     </hint>
     <hint type="destinationlabel">
-     <x>417</x>
-     <y>219</y>
+     <x>403</x>
+     <y>195</y>
     </hint>
    </hints>
   </connection>
@@ -212,11 +196,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>721</x>
-     <y>355</y>
+     <y>328</y>
     </hint>
     <hint type="destinationlabel">
-     <x>634</x>
-     <y>394</y>
+     <x>608</x>
+     <y>301</y>
     </hint>
    </hints>
   </connection>
@@ -227,12 +211,12 @@
    <slot>insertToolAbove()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>721</x>
-     <y>137</y>
+     <x>688</x>
+     <y>110</y>
     </hint>
     <hint type="destinationlabel">
-     <x>384</x>
-     <y>232</y>
+     <x>470</x>
+     <y>83</y>
     </hint>
    </hints>
   </connection>
@@ -247,8 +231,24 @@
      <y>452</y>
     </hint>
     <hint type="destinationlabel">
-     <x>431</x>
-     <y>278</y>
+     <x>605</x>
+     <y>362</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>saveButton</sender>
+   <signal>clicked()</signal>
+   <receiver>tooltable</receiver>
+   <slot>loadToolTable()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>151</x>
+     <y>444</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>151</x>
+     <y>211</y>
     </hint>
    </hints>
   </connection>
