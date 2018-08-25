@@ -291,8 +291,10 @@ class ToolModel(QAbstractTableModel):
     def addTool(self, tool):
         pass
 
-    def removeRow(self, row):
+    def removeRow(self, row, parent=QModelIndex()):
+        self.beginRemoveRows(parent, row, row)
         self.tool_list.pop(row)
+        self.endRemoveRows()
 
 
 class ToolTable(QTableView):
