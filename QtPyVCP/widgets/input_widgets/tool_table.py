@@ -28,8 +28,7 @@ import linuxcnc
 
 from PyQt5.QtCore import pyqtSlot, pyqtProperty, Qt, QModelIndex, QAbstractTableModel
 from PyQt5.QtWidgets import QTableView, QMessageBox, QAbstractItemView, QSpinBox, QItemDelegate, QDoubleSpinBox, \
-    QLineEdit
-from PyQt5.QtGui import QStandardItem, QStandardItemModel, QFont, QColor
+    QLineEdit, QStyledItemDelegate
 
 # Set up logging
 from QtPyVCP.utilities import logger
@@ -39,21 +38,41 @@ LOG = logger.getLogger(__name__)
 INFO = Info()
 
 
-class ItemDelegate(QItemDelegate):
+class ItemDelegate(QStyledItemDelegate):
+    
+    def __init__(self):
+        super(ItemDelegate, self).__init__()
+        self._padding = ' ' * max(1, 2)
+
+    def displayText(self, text, locale):
+        return self._padding + text
+
     def createEditor(self, parent, option, index):
         if index.column() in (0, 1):
             editor = QSpinBox(parent)
             editor.setMinimum(0)
             editor.setMaximum(100)
+            margins = editor.textMargins()
+            padding = editor.fontMetrics().width(self._padding) + 1
+            margins.setLeft(margins.left() + padding)
+            editor.setTextMargins(margins)
             return editor
 
         elif index.column() in (2, 3):
             editor = QDoubleSpinBox(parent)
             editor.setMinimum(0)
+            margins = editor.textMargins()
+            padding = editor.fontMetrics().width(self._padding) + 1
+            margins.setLeft(margins.left() + padding)
+            editor.setTextMargins(margins)
             return editor
 
         elif index.column() == 4:
             editor = QLineEdit(parent)
+            margins = editor.textMargins()
+            padding = editor.fontMetrics().width(self._padding) + 1
+            margins.setLeft(margins.left() + padding)
+            editor.setTextMargins(margins)
             return editor
 
         return None
@@ -200,7 +219,6 @@ class ToolModel(QAbstractTableModel):
             elif column == 4:
                 return str(item[4])
 
-
         elif role == Qt.DisplayRole:
             if column == 0:
                 return item[0]
@@ -223,7 +241,7 @@ class ToolModel(QAbstractTableModel):
             elif column == 3:
                 return Qt.AlignVCenter | Qt.AlignRight
             elif column == 4:
-                return Qt.AlignVCenter | Qt.AlignJustify
+                return Qt.AlignVCenter | Qt.AlignLeft
         """
         elif role == Qt.FontRole:
 
