@@ -27,7 +27,7 @@ import sys
 import linuxcnc
 
 from PyQt5.QtCore import pyqtSlot, pyqtProperty, Qt, QModelIndex, QAbstractTableModel, QRegExp
-from PyQt5.QtGui import QValidator, QRegExpValidator
+from PyQt5.QtGui import QValidator, QRegExpValidator, QStandardItemModel
 from PyQt5.QtWidgets import QTableView, QMessageBox, QAbstractItemView, QSpinBox, QDoubleSpinBox, \
     QLineEdit, QStyledItemDelegate
 
@@ -106,9 +106,6 @@ class ToolItem(object):
     def appendChild(self, item):
         self.childItems.append(item)
 
-    def removeChild(self, index):
-        self.childItems.pop(index)
-
     def child(self, row):
         return self.childItems[row]
 
@@ -133,10 +130,11 @@ class ToolItem(object):
         return 0
 
 
-class ToolModel(QAbstractTableModel):
+class ToolModel(QStandardItemModel):
     def __init__(self, parent=None):
         super(ToolModel, self).__init__(parent)
         self.table_header = ["Tool", "Pocket", "Z", "Diameter", "Comment"]
+        self.new_tool = [0, 0, 0, 0, "New Tool"]
 
         self.rootItem = ToolItem(self.table_header)
         self.tool_list = list()
@@ -288,14 +286,19 @@ class ToolModel(QAbstractTableModel):
         file.flush()
         os.fsync(file.fileno())
 
-    def addTool(self, tool):
-        pass
+    def insertRows(self, row, dir, index=QModelIndex()):
+        self.beginInsertRows(index, row + dir, row + dir -1)
+        self.tool_list.insert(row + dir, self.new_tool)
+        self.endInsertRows()
 
-    def removeRow(self, row, parent=QModelIndex()):
-        self.beginRemoveRows(parent, row, row)
+        return True
+
+    def removeRow(self, row, index=QModelIndex()):
+        self.beginRemoveRows(index, row, row)
         self.tool_list.pop(row)
         self.endRemoveRows()
 
+        return True
 
 class ToolTable(QTableView):
 
@@ -330,9 +333,6 @@ class ToolTable(QTableView):
                 "Do you wan't to re-load the tool table?\n all unsaved changes will be lost."):
             return
 
-        if len(self.model.tool_list):
-            self.removeAllTools(confirm=False)
-
         fn = self.tool_table_file
 
         if fn is None:
@@ -346,6 +346,8 @@ class ToolTable(QTableView):
 
         with open(fn, "r") as f:
             self.model.loadToolTable(f)
+
+        self.selectRow(0)
 
     @pyqtSlot()
     def saveToolTable(self):
@@ -366,15 +368,11 @@ class ToolTable(QTableView):
 
     @pyqtSlot()
     def insertToolAbove(self):
-        row_num = self.selectedRow()
-        self.model.insertRow(row_num, self.newRow(row_num))
-        self.selectRow(row_num)
+        self.model.insertRows(self.selectedRow(), 0)
 
     @pyqtSlot()
     def insertToolBelow(self):
-        row_num = self.selectedRow() + 1
-        self.model.insertRow(row_num, self.newRow(row_num))
-        self.selectRow(row_num)
+        self.model.insertRows(self.selectedRow(), 1)
 
     @pyqtSlot()
     def deleteSelectedTool(self):
@@ -384,9 +382,7 @@ class ToolTable(QTableView):
         if not self.ask_dialog("Do yo wan't to delete T{} ?".format(current_tool)):
             return
 
-        indexes = self.selectionModel().selectedRows()
-        for index in sorted(indexes):
-            self.model.removeRow(index.row())
+        self.model.removeRow(current_row)
 
     @pyqtSlot()
     def removeAllTools(self, confirm=True):
@@ -394,7 +390,7 @@ class ToolTable(QTableView):
             if not self.ask_dialog("Do yo wan't to delete the whole tool table?"):
                 return
 
-        for i in reversed(range(self.model.rowCount() + 1)):
+        for i in reversed(range(self.model.rowCount())):
             self.model.removeRow(i)
 
     def ask_dialog(self, message):
