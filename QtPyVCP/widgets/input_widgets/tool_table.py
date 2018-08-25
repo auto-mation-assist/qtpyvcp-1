@@ -26,8 +26,9 @@ import sys
 
 import linuxcnc
 
-from PyQt5.QtCore import pyqtSlot, pyqtProperty, Qt, QModelIndex, QAbstractTableModel
-from PyQt5.QtWidgets import QTableView, QMessageBox, QAbstractItemView, QSpinBox, QItemDelegate, QDoubleSpinBox, \
+from PyQt5.QtCore import pyqtSlot, pyqtProperty, Qt, QModelIndex, QAbstractTableModel, QRegExp
+from PyQt5.QtGui import QValidator, QRegExpValidator
+from PyQt5.QtWidgets import QTableView, QMessageBox, QAbstractItemView, QSpinBox, QDoubleSpinBox, \
     QLineEdit, QStyledItemDelegate
 
 # Set up logging
@@ -44,11 +45,18 @@ class ItemDelegate(QStyledItemDelegate):
         super(ItemDelegate, self).__init__()
         self._padding = ' ' * 2
 
-    def displayText(self, text, locale):
-        return self._padding + text
+    def displayText(self, value, locale):
+
+        if type(value) == int:
+            return str(value)
+        elif type(value) == float:
+            return "{0:.4f}".format(value)
+
+        return "{}{}".format(self._padding, value)
 
     def createEditor(self, parent, option, index):
         if index.column() in (0, 1):
+
             editor = QSpinBox(parent)
             editor.setMinimum(0)
             editor.setMaximum(100)
@@ -119,7 +127,6 @@ class ToolItem(object):
     def row(self):
         if self.parentItem:
             return self.parentItem.childItems.index(self)
-
         return 0
 
 
@@ -131,22 +138,11 @@ class ToolModel(QAbstractTableModel):
         self.rootItem = ToolItem(self.table_header)
         self._tool_list = list()
 
-    def columnCount(self, parent):
-        if parent.isValid():
-            return parent.internalPointer().columnCount()
-        else:
-            return self.rootItem.columnCount()
+    def columnCount(self, parent=None):
+        return len(self.table_header)
 
-    def rowCount(self, parent):
-        if parent.column() > 0:
-            return 0
-
-        if not parent.isValid():
-            parentItem = self.rootItem
-        else:
-            parentItem = parent.internalPointer()
-
-        return parentItem.childCount()
+    def rowCount(self, parent=None):
+        return len(self._tool_list)
 
     def flags(self, index):
         return Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsEditable
@@ -183,17 +179,6 @@ class ToolModel(QAbstractTableModel):
             return QModelIndex()
 
         return self.createIndex(parentItem.row(), 0, parentItem)
-
-    def rowCount(self, parent):
-        if parent.column() > 0:
-            return 0
-
-        if not parent.isValid():
-            parentItem = self.rootItem
-        else:
-            parentItem = parent.internalPointer()
-
-        return parentItem.childCount()
 
     def data(self, index, role=Qt.DisplayRole):
         return self._data(self._tool_list[index.row()], index.column(), role)
@@ -271,14 +256,34 @@ class ToolModel(QAbstractTableModel):
                 for word in line.split():
                     if word.startswith(i):
                         item = word.lstrip(i)
-                        tool.append(item)
+                        if i in ('T', 'P'):
+                            tool.append(int(item))
+                        elif i in ('Z', 'D'):
+                            tool.append(float(item))
 
-            tool.append(comment)
+            tool.append(str(comment))
 
             # Append a new item to the current parent's list of children.
             parents[-1].appendChild(ToolItem(tool, parents[-1]))
 
             self._tool_list.append(tool)
+
+    def saveTools(self, file):
+        for row_index in range(self.rowCount()):
+            line = ""
+            for col_index in range(self.columnCount()):
+                item = self._tool_list[row_index][col_index]
+                if item is not None and item != "":
+                    if col_index in (range(0, 4)):  # tool# pocket#
+                        line += "{}{} ".format(['T', 'P', 'Z', 'D', ';'][col_index], item)
+                    else:
+                        line += "{}{}".format(['T', 'P', 'Z', 'D', ';'][col_index], item.strip())
+            if line:
+                line += "\n"
+                file.write(line)
+
+        file.flush()
+        os.fsync(file.fileno())
 
 
 class ToolTable(QTableView):
@@ -343,28 +348,13 @@ class ToolTable(QTableView):
         LOG.debug("Saving tool table as: {0}".format(fn))
 
         with open(fn, "w") as f:
-            for row_index in range(self.model.rowCount()):
-                line = ""
-                for col_index in range(self.col_count):
-                    item = self.model.item(row_index, col_index)
-                    if item.text() is not None:
-                        if item.text() != "":
-                            if col_index in (0, 1):  # tool# pocket#
-                                line += "{}{} ".format(['T', 'P', 'Z', 'D', ';'][col_index], item.text())
-                            else:
-                                line += "{}{} ".format(['T', 'P', 'Z', 'D', ';'][col_index], item.text().strip())
-                if line:
-                    line += "\n"
-                    f.write(line)
-
-            f.flush()
-            os.fsync(f.fileno())
+            self.model.saveTools(f)
 
         self.cmd.load_tool_table()
 
     @pyqtSlot()
     def appendTool(self):
-        row_num = self.model.rowCount() + 1
+        # row_num = self.model.rowCount() + 1
         self.model.appendRow(self.newRow(row_num))
         self.selectRow(row_num - 1)
 
