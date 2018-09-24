@@ -35,10 +35,10 @@ class OffsetsDialog(QDialog):
         print('Set method called.')
 
     def close_method(self):
-        print('Close method called.')
+        self.hide()
 
-    def __init__(self):
-        super(OffsetsDialog, self).__init__()
+    def __init__(self, parent):
+        super(OffsetsDialog, self).__init__(parent=parent, flags=Qt.ToolTip)
 
         info = Info()
 
@@ -87,9 +87,3 @@ class OffsetsDialog(QDialog):
 
         set_button.clicked.connect(self.set_method)
         close_button.clicked.connect(self.close_method)
-
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    dialog = OffsetsDialog()
-    sys.exit(dialog.exec_())
