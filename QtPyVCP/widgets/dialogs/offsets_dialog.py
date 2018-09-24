@@ -38,7 +38,7 @@ class OffsetsDialog(QDialog):
         self.hide()
 
     def __init__(self, parent):
-        super(OffsetsDialog, self).__init__(parent=parent, flags=Qt.ToolTip)
+        super(OffsetsDialog, self).__init__(parent=parent, flags=Qt.Popup)
 
         info = Info()
 
