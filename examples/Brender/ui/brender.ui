@@ -943,6 +943,19 @@
            <string>circle</string>
           </property>
          </widget>
+         <widget class="HALLEDButton" name="halledbutton">
+          <property name="geometry">
+           <rect>
+            <x>780</x>
+            <y>170</y>
+            <width>151</width>
+            <height>61</height>
+           </rect>
+          </property>
+          <property name="pinName" stdset="0">
+           <string>halui.program.is-running</string>
+          </property>
+         </widget>
         </widget>
         <widget class="QWidget" name="tab">
          <attribute name="title">
@@ -2638,6 +2651,11 @@
    <class>ActionButton</class>
    <extends>QPushButton</extends>
    <header>QtPyVCP.widgets.button_widgets.action_button</header>
+  </customwidget>
+  <customwidget>
+   <class>HALLEDButton</class>
+   <extends>QPushButton</extends>
+   <header>QtPyVCP.widgets.hal_widgets.hal_led_button</header>
   </customwidget>
   <customwidget>
    <class>DROWidget</class>
