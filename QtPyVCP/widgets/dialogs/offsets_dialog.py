@@ -18,13 +18,10 @@
 #   You should have received a copy of the GNU General Public License
 #   along with QtPyVCP.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
+from linuxcnc import command
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import (QApplication, QComboBox, QDialog,
-                             QDialogButtonBox, QFormLayout, QGridLayout, QGroupBox, QHBoxLayout,
-                             QLabel, QLineEdit, QMenu, QMenuBar, QPushButton, QSpinBox, QTextEdit,
-                             QVBoxLayout)
+from PyQt5.QtWidgets import QComboBox, QDialog, QHBoxLayout, QLabel, QLineEdit, QPushButton, QVBoxLayout
 
 from QtPyVCP.utilities.info import Info
 
@@ -32,7 +29,18 @@ from QtPyVCP.utilities.info import Info
 class OffsetsDialog(QDialog):
 
     def set_method(self):
-        print('Set method called.')
+        system = self.system_combo.currentData()
+        axis = self.axis_combo.currentData()
+        coords = self.coords_input.text()
+
+        offset_cmd = command("G10 L20 {} {}{}"
+                             .format(system,
+                                     axis,
+                                     coords
+                                     )
+                             )
+
+        self.cmd.mdi(offset_cmd)
 
     def close_method(self):
         self.hide()
@@ -42,29 +50,31 @@ class OffsetsDialog(QDialog):
 
         info = Info()
 
+        self.cmd = command
+
         axis_list = info.getAxisList()
 
-        coords_combo = QComboBox()
+        self.axis_combo = QComboBox()
         for axis in axis_list:
-            coords_combo.addItem(axis.upper(), axis)
+            self.axis_combo.addItem(axis.upper(), axis)
 
         coords_msg = QLabel("Coordinate relative to workpiece:")
         system_msg = QLabel("Coordinate System:")
 
-        coords_input = QLineEdit('0.0000')
-        coords_input.setInputMask('000009.00000')
+        self.coords_input = QLineEdit('0.0000')
+        self.coords_input.setInputMask('000009.00000')
 
-        system_combo = QComboBox()
-        system_combo.addItem("P0 - Current", "P0")
-        system_combo.addItem("P1 - G54", "P1")
-        system_combo.addItem("P2 - G55", "P2")
-        system_combo.addItem("P3 - G56", "P3")
-        system_combo.addItem("P4 - G57", "P4")
-        system_combo.addItem("P5 - G58", "P5")
-        system_combo.addItem("P6 - G59", "P6")
-        system_combo.addItem("P7 - G59.1", "P6")
-        system_combo.addItem("P8 - G59.2", "P7")
-        system_combo.addItem("P9 - G59.3", "P8")
+        self.system_combo = QComboBox()
+        self.system_combo.addItem("P0 - Current", "P0")
+        self.system_combo.addItem("P1 - G54", "P1")
+        self.system_combo.addItem("P2 - G55", "P2")
+        self.system_combo.addItem("P3 - G56", "P3")
+        self.system_combo.addItem("P4 - G57", "P4")
+        self.system_combo.addItem("P5 - G58", "P5")
+        self.system_combo.addItem("P6 - G59", "P6")
+        self.system_combo.addItem("P7 - G59.1", "P6")
+        self.system_combo.addItem("P8 - G59.2", "P7")
+        self.system_combo.addItem("P9 - G59.3", "P8")
 
         close_button = QPushButton("Close")
         set_button = QPushButton("Set")
@@ -75,11 +85,11 @@ class OffsetsDialog(QDialog):
         buttonLayout.addWidget(close_button)
         buttonLayout.addWidget(set_button)
 
-        mainLayout.addWidget(coords_combo, alignment=Qt.AlignTop)
+        mainLayout.addWidget(self.axis_combo, alignment=Qt.AlignTop)
         mainLayout.addWidget(coords_msg, alignment=Qt.AlignLeft | Qt.AlignTop)
-        mainLayout.addWidget(coords_input, alignment=Qt.AlignTop)
+        mainLayout.addWidget(self.coords_input, alignment=Qt.AlignTop)
         mainLayout.addWidget(system_msg, alignment=Qt.AlignLeft | Qt.AlignTop)
-        mainLayout.addWidget(system_combo, alignment=Qt.AlignBottom)
+        mainLayout.addWidget(self.system_combo, alignment=Qt.AlignBottom)
         mainLayout.addLayout(buttonLayout)
 
         self.setLayout(mainLayout)
