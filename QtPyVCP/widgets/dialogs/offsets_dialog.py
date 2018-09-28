@@ -28,23 +28,6 @@ from QtPyVCP.utilities.info import Info
 
 class OffsetsDialog(QDialog):
 
-    def set_method(self):
-        system = self.system_combo.currentData()
-        axis = self.axis_combo.currentData()
-        coords = self.coords_input.text()
-
-        offset_cmd = command("G10 L20 {} {}{}"
-                             .format(system,
-                                     axis,
-                                     coords
-                                     )
-                             )
-
-        self.cmd.mdi(offset_cmd)
-
-    def close_method(self):
-        self.hide()
-
     def __init__(self, parent):
         super(OffsetsDialog, self).__init__(parent=parent, flags=Qt.Popup)
 
@@ -65,16 +48,21 @@ class OffsetsDialog(QDialog):
         self.coords_input.setInputMask('000009.00000')
 
         self.system_combo = QComboBox()
-        self.system_combo.addItem("P0 - Current", "P0")
-        self.system_combo.addItem("P1 - G54", "P1")
-        self.system_combo.addItem("P2 - G55", "P2")
-        self.system_combo.addItem("P3 - G56", "P3")
-        self.system_combo.addItem("P4 - G57", "P4")
-        self.system_combo.addItem("P5 - G58", "P5")
-        self.system_combo.addItem("P6 - G59", "P6")
-        self.system_combo.addItem("P7 - G59.1", "P6")
-        self.system_combo.addItem("P8 - G59.2", "P7")
-        self.system_combo.addItem("P9 - G59.3", "P8")
+
+        systems = {"P0": "P0 Current",
+                   "P1": "P1 G54",
+                   "P2": "P1 G55",
+                   "P3": "P1 G56",
+                   "P4": "P1 G57",
+                   "P5": "P1 G58",
+                   "P6": "P1 G59",
+                   "P7": "P1 G59.1",
+                   "P8": "P1 G59.1",
+                   "P9": "P1 G59.3"
+                   }
+
+        for key, value in systems.items():
+            self.system_combo.addItem(value, key)
 
         close_button = QPushButton("Close")
         set_button = QPushButton("Set")
@@ -97,3 +85,20 @@ class OffsetsDialog(QDialog):
 
         set_button.clicked.connect(self.set_method)
         close_button.clicked.connect(self.close_method)
+
+    def set_method(self):
+        system = self.system_combo.currentData()
+        axis = self.axis_combo.currentData()
+        coords = self.coords_input.text()
+
+        offset_cmd = command("G10 L20 {} {}{}"
+                             .format(system,
+                                     axis,
+                                     coords
+                                     )
+                             )
+
+        self.cmd.mdi(offset_cmd)
+
+    def close_method(self):
+        self.hide()
