@@ -18,12 +18,16 @@
 #   You should have received a copy of the GNU General Public License
 #   along with QtPyVCP.  If not, see <http://www.gnu.org/licenses/>.
 
-from linuxcnc import command
+from collections import OrderedDict
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QComboBox, QDialog, QHBoxLayout, QLabel, QLineEdit, QPushButton, QVBoxLayout
 
 from QtPyVCP.utilities.info import Info
+from QtPyVCP.utilities import logger
+from QtPyVCP.actions.machine_actions import issue_mdi
+
+Log = logger.getLogger(__name__)
 
 
 class OffsetsDialog(QDialog):
@@ -33,11 +37,10 @@ class OffsetsDialog(QDialog):
     def __init__(self, parent=None):
         super(OffsetsDialog, self).__init__(parent=parent, flags=Qt.Popup)
 
-        info = Info()
+        self.info = Info()
+        self.log = Log()
 
-        self.cmd = command
-
-        axis_list = info.getAxisList()
+        axis_list = self.info.getAxisList()
 
         self.axis_combo = QComboBox()
         for axis in axis_list:
@@ -63,26 +66,26 @@ class OffsetsDialog(QDialog):
                          "P9": "P9 G59.3"
                          }
 
-        for key, value in coord_systems.items():
-            self.system_combo.addItem(value, key)
+        # for key, value in OrderedDict(sorted(coord_systems.items(), key=lambda t: t[0])).items():
+        #     self.system_combo.addItem(value, key)
 
         close_button = QPushButton("Close")
         set_button = QPushButton("Set")
 
-        mainLayout = QVBoxLayout()
-        buttonLayout = QHBoxLayout()
+        main_layout = QVBoxLayout()
+        button_layout = QHBoxLayout()
 
-        buttonLayout.addWidget(close_button)
-        buttonLayout.addWidget(set_button)
+        button_layout.addWidget(close_button)
+        button_layout.addWidget(set_button)
 
-        mainLayout.addWidget(self.axis_combo, alignment=Qt.AlignTop)
-        mainLayout.addWidget(coords_msg, alignment=Qt.AlignLeft | Qt.AlignTop)
-        mainLayout.addWidget(self.coords_input, alignment=Qt.AlignTop)
-        mainLayout.addWidget(system_msg, alignment=Qt.AlignLeft | Qt.AlignTop)
-        mainLayout.addWidget(self.system_combo, alignment=Qt.AlignBottom)
-        mainLayout.addLayout(buttonLayout)
+        main_layout.addWidget(self.axis_combo, alignment=Qt.AlignTop)
+        main_layout.addWidget(coords_msg, alignment=Qt.AlignLeft | Qt.AlignTop)
+        main_layout.addWidget(self.coords_input, alignment=Qt.AlignTop)
+        main_layout.addWidget(system_msg, alignment=Qt.AlignLeft | Qt.AlignTop)
+        main_layout.addWidget(self.system_combo, alignment=Qt.AlignBottom)
+        main_layout.addLayout(button_layout)
 
-        self.setLayout(mainLayout)
+        self.setLayout(main_layout)
         self.setWindowTitle("Regular Offsets")
 
         set_button.clicked.connect(self.set_method)
@@ -93,14 +96,15 @@ class OffsetsDialog(QDialog):
         axis = self.axis_combo.currentData()
         coords = self.coords_input.text()
 
-        offset_cmd = command("G10 L20 {} {}{}"
-                             .format(system,
-                                     axis,
-                                     coords
-                                     )
-                             )
+        offset_mdi = "G10 L20 {} {}{}".format(system, axis, coords)
+        """
+        if issue_mdi.ok():
+            issue_mdi(offset_mdi)
+        else:
+            self.log.debug("Error issuing MDI: {}".format(issue_mdi.ok.msg))
+        """
 
-        self.cmd.mdi(offset_cmd)
 
     def close_method(self):
         self.hide()
+
