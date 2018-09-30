@@ -53,14 +53,14 @@ class OffsetsDialog(QDialog):
 
         coord_systems = {"P0": "P0 Current",
                          "P1": "P1 G54",
-                         "P2": "P1 G55",
-                         "P3": "P1 G56",
-                         "P4": "P1 G57",
-                         "P5": "P1 G58",
-                         "P6": "P1 G59",
-                         "P7": "P1 G59.1",
-                         "P8": "P1 G59.1",
-                         "P9": "P1 G59.3"
+                         "P2": "P2 G55",
+                         "P3": "P3 G56",
+                         "P4": "P4 G57",
+                         "P5": "P5 G58",
+                         "P6": "P6 G59",
+                         "P7": "P7 G59.1",
+                         "P8": "P8 G59.1",
+                         "P9": "P9 G59.3"
                          }
 
         for key, value in coord_systems.items():
