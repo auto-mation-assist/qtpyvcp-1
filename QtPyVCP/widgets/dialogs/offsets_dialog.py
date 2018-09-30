@@ -49,19 +49,19 @@ class OffsetsDialog(QDialog):
 
         self.system_combo = QComboBox()
 
-        systems = {"P0": "P0 Current",
-                   "P1": "P1 G54",
-                   "P2": "P1 G55",
-                   "P3": "P1 G56",
-                   "P4": "P1 G57",
-                   "P5": "P1 G58",
-                   "P6": "P1 G59",
-                   "P7": "P1 G59.1",
-                   "P8": "P1 G59.1",
-                   "P9": "P1 G59.3"
-                   }
+        coord_systems = {"P0": "P0 Current",
+                         "P1": "P1 G54",
+                         "P2": "P1 G55",
+                         "P3": "P1 G56",
+                         "P4": "P1 G57",
+                         "P5": "P1 G58",
+                         "P6": "P1 G59",
+                         "P7": "P1 G59.1",
+                         "P8": "P1 G59.1",
+                         "P9": "P1 G59.3"
+                         }
 
-        for key, value in systems.items():
+        for key, value in coord_systems.items():
             self.system_combo.addItem(value, key)
 
         close_button = QPushButton("Close")
