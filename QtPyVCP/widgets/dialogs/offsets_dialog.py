@@ -28,7 +28,9 @@ from QtPyVCP.utilities.info import Info
 
 class OffsetsDialog(QDialog):
 
-    def __init__(self, parent):
+    id = 'work_offsets'
+
+    def __init__(self, parent=None):
         super(OffsetsDialog, self).__init__(parent=parent, flags=Qt.Popup)
 
         info = Info()

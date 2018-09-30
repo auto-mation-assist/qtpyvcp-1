@@ -479,22 +479,6 @@
            <enum>StatusLabel::speed_override</enum>
           </property>
          </widget>
-         <widget class="ActionButton" name="actionbutton_30">
-          <property name="geometry">
-           <rect>
-            <x>580</x>
-            <y>330</y>
-            <width>131</width>
-            <height>23</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Feedhold</string>
-          </property>
-          <property name="actionName" stdset="0">
-           <string>machine.feedhold.toggle-enable</string>
-          </property>
-         </widget>
          <widget class="ActionSlider" name="actionslider">
           <property name="geometry">
            <rect>
@@ -930,8 +914,8 @@
          <widget class="SubCallButton" name="subcallbutton">
           <property name="geometry">
            <rect>
-            <x>460</x>
-            <y>320</y>
+            <x>870</x>
+            <y>140</y>
             <width>71</width>
             <height>41</height>
            </rect>
@@ -941,6 +925,22 @@
           </property>
           <property name="sub_name" stdset="0">
            <string>circle</string>
+          </property>
+         </widget>
+         <widget class="ActionButton" name="actionbutton_30">
+          <property name="geometry">
+           <rect>
+            <x>480</x>
+            <y>340</y>
+            <width>111</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Show Dialog</string>
+          </property>
+          <property name="actionName" stdset="0">
+           <string>gui.dialog.show:work_offsets</string>
           </property>
          </widget>
         </widget>

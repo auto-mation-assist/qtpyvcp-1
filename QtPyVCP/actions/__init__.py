@@ -7,6 +7,8 @@ import spindle_actions as spindle
 import coolant_actions as coolant
 import tool_actions as tool
 
+import gui_actions as gui
+
 # Set up logging
 from QtPyVCP.utilities import logger
 LOG = logger.getLogger(__name__)
