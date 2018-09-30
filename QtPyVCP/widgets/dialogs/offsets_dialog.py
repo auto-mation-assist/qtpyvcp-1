@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 #   Copyright (c) 2018 Kurt Jacobson
 #      <kurtcjacobson@gmail.com>
 #
@@ -38,7 +36,7 @@ class OffsetsDialog(QDialog):
         super(OffsetsDialog, self).__init__(parent=parent, flags=Qt.Popup)
 
         self.info = Info()
-        self.log = Log()
+        self.log = Log
 
         axis_list = self.info.getAxisList()
 
@@ -66,8 +64,8 @@ class OffsetsDialog(QDialog):
                          "P9": "P9 G59.3"
                          }
 
-        # for key, value in OrderedDict(sorted(coord_systems.items(), key=lambda t: t[0])).items():
-        #     self.system_combo.addItem(value, key)
+        for key, value in OrderedDict(sorted(coord_systems.items(), key=lambda t: t[0])).items():
+             self.system_combo.addItem(value, key)
 
         close_button = QPushButton("Close")
         set_button = QPushButton("Set")
@@ -97,12 +95,11 @@ class OffsetsDialog(QDialog):
         coords = self.coords_input.text()
 
         offset_mdi = "G10 L20 {} {}{}".format(system, axis, coords)
-        """
+
         if issue_mdi.ok():
             issue_mdi(offset_mdi)
         else:
             self.log.debug("Error issuing MDI: {}".format(issue_mdi.ok.msg))
-        """
 
 
     def close_method(self):
