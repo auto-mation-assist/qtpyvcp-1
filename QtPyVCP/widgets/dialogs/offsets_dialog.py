@@ -65,7 +65,7 @@ class OffsetsDialog(QDialog):
                          }
 
         for key, value in OrderedDict(sorted(coord_systems.items(), key=lambda t: t[0])).items():
-             self.system_combo.addItem(value, key)
+            self.system_combo.addItem(value, key)
 
         close_button = QPushButton("Close")
         set_button = QPushButton("Set")
@@ -100,7 +100,6 @@ class OffsetsDialog(QDialog):
             issue_mdi(offset_mdi)
         else:
             self.log.debug("Error issuing MDI: {}".format(issue_mdi.ok.msg))
-
 
     def close_method(self):
         self.hide()
