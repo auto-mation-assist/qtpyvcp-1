@@ -30,7 +30,7 @@ import time
 
 
 from PyQt5.QtGui import QColor
-from PyQt5.QtCore import pyqtSignal, QPoint, QSize, Qt
+from PyQt5.QtCore import pyqtSignal, QPoint, QSize, Qt, QTimer
 from PyQt5.QtWidgets import QApplication, QHBoxLayout, QSlider, QWidget
 
 # Set up logging
@@ -237,6 +237,11 @@ class QBackPlot(QGLWidget, glcanon.GlCanonDraw, glnav.GlNavBase):
         self.zRot = 0
 
         self.Green = QColor.fromCmykF(0.40, 0.0, 1.0, 0.0)
+
+
+    def reload_file(self, *args):
+        self.load(self.current_file)
+
 
     def load(self, filename=None):
         s = self.stat

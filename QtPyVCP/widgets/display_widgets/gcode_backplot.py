@@ -77,7 +77,7 @@ class  GcodeBackplot(QBackPlot):
         STATUS.actual_position.connect(self.update)
         STATUS.joint_actual_position.connect(self.update)
         STATUS.homed.connect(self.update)
-        STATUS.g5x_offset.connect(self.update)
+        STATUS.g5x_offset.connect(self.reload_file)
         STATUS.g92_offset.connect(self.update)
         STATUS.limit.connect(self.update)
         STATUS.tool_in_spindle.connect(self.update)

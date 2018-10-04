@@ -42,7 +42,7 @@ class OffsetsDialog(QDialog):
 
         self.axis_combo = QComboBox()
         for axis in axis_list:
-            self.axis_combo.addItem(axis.upper(), axis)
+            self.axis_combo.addItem(axis.upper(), axis.upper())
 
         coords_msg = QLabel("Coordinate relative to workpiece:")
         system_msg = QLabel("Coordinate System:")
@@ -98,6 +98,7 @@ class OffsetsDialog(QDialog):
 
         if issue_mdi.ok():
             issue_mdi(offset_mdi)
+            print(offset_mdi)
         else:
             self.log.debug("Error issuing MDI: {}".format(issue_mdi.ok.msg))
 

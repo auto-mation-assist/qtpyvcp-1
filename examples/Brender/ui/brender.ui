@@ -59,7 +59,7 @@
          <enum>QTabWidget::South</enum>
         </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="tab_2">
          <attribute name="title">
@@ -1997,6 +1997,16 @@
            </property>
           </spacer>
          </item>
+         <item>
+          <widget class="ActionButton" name="actionbutton_45">
+           <property name="text">
+            <string>Work offsets</string>
+           </property>
+           <property name="actionName" stdset="0">
+            <string>gui.dialog.show:work_offsets</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </widget>
       </item>
@@ -2242,7 +2252,7 @@
      <x>0</x>
      <y>0</y>
      <width>1024</width>
-     <height>20</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuExit">
